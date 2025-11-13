@@ -1,5 +1,6 @@
-from models.fields.phone import Phone
-from models.fields.birthday import Birthday
+from phone import Phone
+from birthday import Birthday
+from address import HomeAddress
 
 class AddressBookRecord:
     def __init__(self, name: str):
@@ -14,7 +15,7 @@ class AddressBookRecord:
     def add_birthday(self, date: Birthday):
         pass
 
-    def add_address(self, address: str):
+    def add_address(self, address: HomeAddress):
         pass
     
     def edit_phone(self, old_phone: Phone, new_phone: Phone):

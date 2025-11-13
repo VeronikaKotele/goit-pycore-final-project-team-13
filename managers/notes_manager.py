@@ -4,12 +4,7 @@ from state_storage_manager import StateStorageManager
 class NotesManager:
     def __init__(self):
         self.__notebook = Notebook()
-        self.__storage_manager = StateStorageManager("notes_cache.pkl")
-        if self.__storage_manager.try_load(self.__notebook):
-            print("Notebook loaded from cache.")
-
-    def __del__(self):
-        self.__storage_manager.save(self.__notebook)
+        # todo: store state on hard drive using StateStorageManager("notes_cache.pkl")
 
     def add_note(self, note: str):
         pass

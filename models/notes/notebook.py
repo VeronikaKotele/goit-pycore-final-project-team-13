@@ -4,7 +4,7 @@ class Notebook(UserDict):
     def __setitem__(self, title: str, note: str):
         value = self.data.get(title)
         if value:
-            self.update_item(title, note)
+            pass # todo: define update behavior
         else:
             self.data[title] = note
 

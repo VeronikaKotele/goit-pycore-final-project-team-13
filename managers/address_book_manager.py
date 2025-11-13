@@ -8,12 +8,7 @@ from state_storage_manager import StateStorageManager
 class AddressBookManager:
     def __init__(self):
         self.__address_book = AddressBook()
-        self.__storage_manager = StateStorageManager("address_book_cache.pkl")
-        if self.__storage_manager.try_load(self.__address_book):
-            print("Address book loaded from cache.")
-
-    def __del__(self):
-        self.__storage_manager.save(self.__address_book)
+        # todo: store state on hard drive using StateStorageManager("address_book_cache.pkl")
 
     def add_record(self, record: AddressBookRecord):
         pass

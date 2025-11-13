@@ -7,7 +7,7 @@ class AddressBook(UserDict):
             raise TypeError("Item must be an instance of Record")
         value = self.data.get(name)
         if value:
-            self.update_item(name, record)
+            pass # todo: define update behavior
         else:
             self.data[name] = record
 
