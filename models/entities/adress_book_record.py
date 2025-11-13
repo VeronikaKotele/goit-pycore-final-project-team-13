@@ -4,7 +4,7 @@ from fields.birthday import Birthday
 from fields.address import Address
 from models.managers.notes_manager import Notes
 
-class Record:
+class AddressBookRecord:
     def __init__(self, name):
         self.name = Name(name)
         self.phones = []
