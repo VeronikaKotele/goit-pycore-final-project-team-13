@@ -1,12 +1,11 @@
 from fields.phone import Phone
-from fields.name import Name
+from fields.field import Field
 from fields.birthday import Birthday
-from fields.address import Address
 from models.managers.notes_manager import Notes
 
 class AddressBookRecord:
     def __init__(self, name):
-        self.name = Name(name)
+        self.name = Field(name)
         self.phones = []
         self.birthday = None
         self.address = None
