@@ -23,6 +23,22 @@ class CommandsHandler:
         self.address_book_manager = AddressBookManager()
         self.notes_manager = NotesManager()
 
+        # Map command names to their handler methods
+        self.commands = COMMANDS
+        self.commands["add-phone"].function = self.__add_phone
+        self.commands["remove-phone"].function = self.__remove_phone
+        self.commands["add-birthday"].function = self.__add_birthday
+        self.commands["add-address"].function = self.__add_address
+        self.commands["birthdays"].function = self.__upcoming_birthdays
+        self.commands["search"].function = self.__show_contact
+        self.commands["delete"].function = self.__delete_contact
+        self.commands["all"].function = self.__show_all_contacts
+        self.commands["add-note"].function = self.__add_note
+        self.commands["search-note"].function = self.__show_note
+        self.commands["update-note"].function = self.__update_note
+        self.commands["delete-note"].function = self.__delete_note
+        self.commands["all-notes"].function = self.__show_all_notes
+
     def __add_phone(self, name, phone) -> str:
         self.address_book_manager.add_phone(name, Phone(phone))
         return f"Phone {phone} added for contact {name}."
@@ -82,20 +98,6 @@ class CommandsHandler:
     def __show_all_notes(self):
         return str(self.notes_manager)
 
-    COMMANDS["add-phone"].function = __add_phone
-    COMMANDS["remove-phone"].function = __remove_phone
-    COMMANDS["add-birthday"].function = __add_birthday
-    COMMANDS["add-address"].function = __add_address
-    COMMANDS["birthdays"].function = __upcoming_birthdays
-    COMMANDS["search"].function = __show_contact
-    COMMANDS["delete"].function = __delete_contact
-    COMMANDS["all"].function = __show_all_contacts
-    COMMANDS["add-note"].function = __add_note
-    COMMANDS["search-note"].function = __show_note
-    COMMANDS["update-note"].function = __update_note
-    COMMANDS["delete-note"].function = __delete_note
-    COMMANDS["all-notes"].function = __show_all_notes
-
     class Response:
         def __init__(self, message: str, is_error: bool = False):
             self.message = message
@@ -115,10 +117,10 @@ class CommandsHandler:
         Returns:
             Response: Response object containing the result or error message
         """
-        if cmd_name not in COMMANDS:
+        if cmd_name not in self.commands:
             return CommandsHandler.Response("Unknown command", is_error=True)
 
-        command = COMMANDS[cmd_name]
+        command = self.commands[cmd_name]
         expected_arg_count = command.function.__code__.co_argcount - 1  # exclude 'self'
         if len(args) != expected_arg_count:
             return CommandsHandler.Response(f"Arguments error: Expected {expected_arg_count} arguments, got {len(args)}.", is_error=True)
