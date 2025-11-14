@@ -41,19 +41,19 @@ COMMANDS = {
     },
     "add-note": {
         "desc": "Add a new note.",
-        "example": "add-note shopping_list Buy milk"
+        "example": "add-note 'shopping_list': 'Buy milk'"
     },
     "search-note": {
         "desc": "Search notes by title.",
-        "example": "search-note shopping_list"
+        "example": "search-note 'shopping_list'"
     },
     "update-note": {
         "desc": "Edit an existing note - override by title.",
-        "example": "update-note shopping_list Buy bread instead"
+        "example": "update-note 'shopping_list': 'Buy bread instead'"
     },
     "delete-note": {
         "desc": "Delete a note.",
-        "example": "delete-note shopping_list"
+        "example": "delete-note 'shopping_list'"
     },
     "all-notes": {
         "desc": "Show all notes.",
