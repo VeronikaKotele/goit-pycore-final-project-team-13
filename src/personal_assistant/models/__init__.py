@@ -23,6 +23,6 @@ and provide a robust foundation for the application's functionality.
 
 from .address_book import AddressBook
 from .notebook import Notebook
-from .address_book_entities import AddressBookRecord, Phone, Birthday, HomeAddress
+from .address_book_entities import AddressBookRecord, Phone, Birthday, HomeAddress, Email
 
-__all__ = ['AddressBook', 'Notebook', 'AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday']
+__all__ = ['AddressBook', 'Notebook', 'AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday', 'Email']

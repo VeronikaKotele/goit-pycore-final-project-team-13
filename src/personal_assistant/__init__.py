@@ -23,6 +23,6 @@ Project: GoIT Python Core Final Project
 from . import commands
 from . import commands_palette
 from .managers import AddressBookManager, NotesManager
-from .models import AddressBook, Notebook, AddressBookRecord, HomeAddress, Phone, Birthday
+from .models import AddressBook, Notebook, AddressBookRecord, HomeAddress, Phone, Birthday, Email
 
-__all__ = ['models', 'commands', 'commands_palette', 'AddressBookManager', 'NotesManager', 'AddressBook', 'Notebook', 'AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday', 'commands', 'commands_palette']
+__all__ = ['commands', 'commands_palette', 'AddressBookManager', 'NotesManager', 'AddressBook', 'Notebook', 'AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday', 'Email']

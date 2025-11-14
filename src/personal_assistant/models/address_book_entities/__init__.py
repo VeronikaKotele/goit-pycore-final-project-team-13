@@ -25,5 +25,6 @@ from .address_book_record import AddressBookRecord
 from .address import HomeAddress
 from .phone import Phone
 from .birthday import Birthday
+from .email import Email
 
-__all__ = ['AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday']
+__all__ = ['AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday', 'Email']
