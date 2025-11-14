@@ -17,7 +17,7 @@ class AddressBookRecord:
 
     def add_address(self, address: HomeAddress):
         pass
-    
+
     def edit_phone(self, old_phone: Phone, new_phone: Phone):
         pass
 

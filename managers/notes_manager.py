@@ -1,16 +1,14 @@
 from models.notes.notebook import Notebook
-from state_storage_manager import StateStorageManager
 
 class NotesManager:
     def __init__(self):
         self.__notebook = Notebook()
-        # todo: store state on hard drive using StateStorageManager("notes_cache.pkl")
 
-    def add_note(self, note: str):
+    def add_note(self, title: str, note: str):
         pass
 
     def find(self, title: str):
-        pass
+        return self.__notebook.get(title) or None
 
     def delete(self, title: str):
         pass

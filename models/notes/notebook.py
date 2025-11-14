@@ -1,16 +1,8 @@
-from collections import UserDict
+from models.cacheable_dict import CacheableDict
 
-class Notebook(UserDict):
-    def __setitem__(self, title: str, note: str):
-        value = self.data.get(title)
-        if value:
-            pass # todo: define update behavior
-        else:
-            self.data[title] = note
+class Notebook(CacheableDict):
+    def __init__(self):
+        CacheableDict.__init__(self, "notes_state.pkl")
 
     def __str__(self):
         return "\n".join(str(record) for record in self.data.values())
-    
-    def update_item(self, title: str, note: str):
-        """Combine information."""
-        pass

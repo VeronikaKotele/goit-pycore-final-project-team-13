@@ -1,25 +1,24 @@
 from models.contacts.address import HomeAddress
 from models.contacts.address_book import AddressBook
-from models.contacts.adress_book_record import AddressBookRecord
+from models.contacts.address_book_record import AddressBookRecord
 from models.contacts.phone import Phone
 from models.contacts.birthday import Birthday
-from state_storage_manager import StateStorageManager
 
 class AddressBookManager:
     def __init__(self):
         self.__address_book = AddressBook()
-        # todo: store state on hard drive using StateStorageManager("address_book_cache.pkl")
 
-    def add_record(self, record: AddressBookRecord):
-        pass
+    def add_phone(self, name: str, phone: str):
+        record = self.__address_book.get(name)
+        if not record:
+            record = AddressBookRecord(name)
+        record.add_phone(Phone(phone))
+        self.__address_book[name] = record
 
     def find(self, name: str):
-        pass
-    
-    def delete(self, name: str):
-        pass
+        return self.__address_book.get(name) or None
 
-    def add_phone(self, name: str, phone: Phone):
+    def delete(self, name: str):
         pass
 
     def remove_phone(self, name: str, phone: Phone):
@@ -32,4 +31,4 @@ class AddressBookManager:
         pass
 
     def get_upcoming_birthdays(self, next_days = 7):
-        pass
+        return []
