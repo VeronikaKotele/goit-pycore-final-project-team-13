@@ -1,10 +1,43 @@
+"""
+Personal Assistant Bot - Main Module
+
+This module provides the main entry point for a personal assistant bot that manages
+contacts and notes. The bot provides an interactive command-line interface for users
+to perform various operations on their contacts and notes.
+
+The bot supports commands for:
+- Managing contacts (adding phones, birthdays, addresses)
+- Managing notes (creating, updating, deleting notes)
+- Viewing contact and note information
+"""
+
 from commands import CommandsHandler
 
 def parse_input(user_input):
     """
-    Parses the user's input string into a command and a list of arguments.
+    Parse user input into command and arguments.
+    
+    Takes a user input string and separates it into a command and its arguments.
+    The command is converted to lowercase for case-insensitive matching.
+    
+    Args:
+        user_input (str): The raw input string from the user
+        
+    Returns:
+        tuple: A tuple containing:
+            - cmd (str): The command name in lowercase, empty string if no input
+            - args (list): List of arguments following the command
+            
+    Example:
+        >>> parse_input("add-phone John 1234567890")
+        ("add-phone", ["John", "1234567890"])
+        
+        >>> parse_input("show-all")
+        ("show-all", [])
+        
+        >>> parse_input("")
+        ("", [])
     """
-
     parts = user_input.strip().split()
     cmd = parts[0].lower() if parts else ""
     args = parts[1:]
@@ -12,7 +45,22 @@ def parse_input(user_input):
 
 def main():
     """
-    Main interactive part of the Assistant bot.
+    Main interactive loop of the Personal Assistant bot.
+    
+    Initializes the command handler and starts an interactive session where users
+    can enter commands to manage their contacts and notes. The function handles:
+    - Welcome message and help display
+    - Command parsing and execution  
+    - Error handling and user feedback
+    - Graceful exit on 'exit' or 'close' commands
+    
+    The loop continues until the user enters an exit command, processing each
+    command through the CommandsHandler and displaying appropriate responses.
+    
+    Commands supported:
+        - hi/hello: Greeting response
+        - exit/close: Terminate the application
+        - Various contact and note management commands (see CommandsHandler)
     """
 
     commands_handler = CommandsHandler()
