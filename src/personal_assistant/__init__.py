@@ -24,5 +24,6 @@ from . import commands
 from . import commands_palette
 from .managers import AddressBookManager, NotesManager
 from .models import AddressBook, Notebook, AddressBookRecord, HomeAddress, Phone, Birthday, Email
+from .commands import CommandsHandler
 
-__all__ = ['commands', 'commands_palette', 'AddressBookManager', 'NotesManager', 'AddressBook', 'Notebook', 'AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday', 'Email']
+__all__ = ['commands', 'commands_palette', 'AddressBookManager', 'NotesManager', 'AddressBook', 'Notebook', 'AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday', 'Email', 'CommandsHandler']

@@ -4,9 +4,6 @@ class AddressBookManager:
     def __init__(self):
         self.__address_book = AddressBook()
 
-    def add_record(self, record: AddressBookRecord):
-        pass
-
     def find(self, name: str):
         pass
 
@@ -27,3 +24,6 @@ class AddressBookManager:
 
     def get_upcoming_birthdays(self, next_days = 7):
         pass
+
+    def __str__(self):
+        return "\n".join(str(record) for record in self.__address_book.data.values())
