@@ -9,7 +9,7 @@ The manager abstracts the complexity of the underlying Notebook class,
 providing a simplified API for note management.
 """
 
-from models.notes.notebook import Notebook
+from models import Notebook
 
 class NotesManager:
     """
@@ -64,3 +64,6 @@ class NotesManager:
             This method is currently not implemented.
         """
         pass
+
+        def __str__(self):
+            return "\n".join(str(record) for record in self.__notebook.data.values())

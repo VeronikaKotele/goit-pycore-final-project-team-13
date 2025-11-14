@@ -9,8 +9,8 @@ The address book stores contacts as key-value pairs where keys are contact names
 and values are AddressBookRecord instances.
 """
 
-from models.contacts.address_book_record import AddressBookRecord
-from models.cacheable_dict import CacheableDict
+from .address_book_entities import AddressBookRecord
+from .cacheable_dict import CacheableDict
 
 class AddressBook(CacheableDict):
     """

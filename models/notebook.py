@@ -9,7 +9,7 @@ The notebook stores notes as key-value pairs where keys are note titles
 and values are note contents.
 """
 
-from models.cacheable_dict import CacheableDict
+from .cacheable_dict import CacheableDict
 
 class Notebook(CacheableDict):
     """

@@ -9,9 +9,9 @@ The record provides methods for managing contact information including adding
 phones, birthdays, and addresses, as well as editing and finding specific data.
 """
 
-from phone import Phone
-from birthday import Birthday
-from address import HomeAddress
+from .phone import Phone
+from .birthday import Birthday
+from .address import HomeAddress
 
 class AddressBookRecord:
     """

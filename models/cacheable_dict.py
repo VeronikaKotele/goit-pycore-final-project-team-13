@@ -23,7 +23,7 @@ class CacheableDict(UserDict):
     Attributes:
         __state_storage_filename (str): The filename used for persistence
     """
-    
+
     def __init__(self, filename):
         """
         Initialize a CacheableDict with a storage filename.
@@ -40,6 +40,7 @@ class CacheableDict(UserDict):
             with open(self.__state_storage_filename, "rb") as f:
                 data = pickle.load(f)
                 self.data.update(data)
+                print(f"Cache data loaded from file {self.__state_storage_filename}.")
         except FileNotFoundError:
             pass # do nothing
 
