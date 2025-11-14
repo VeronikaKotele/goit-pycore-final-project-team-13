@@ -1,6 +1,6 @@
 class Email:
     def __init__(self, value):
-        # todo validate, raise exeption
+        # todo validate, raise exсeption
         self.value = value
 
     def __str__(self):

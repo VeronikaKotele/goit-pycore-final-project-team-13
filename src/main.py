@@ -1,4 +1,4 @@
-from commands import commands
+from personal_assistant.commands import commands
 
 def parse_input(user_input):
     """

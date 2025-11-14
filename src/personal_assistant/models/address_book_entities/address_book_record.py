@@ -1,6 +1,6 @@
-from phone import Phone
-from birthday import Birthday
-from address import HomeAddress
+from .phone import Phone
+from .birthday import Birthday
+from .address import HomeAddress
 
 class AddressBookRecord:
     def __init__(self, name: str):
@@ -17,7 +17,7 @@ class AddressBookRecord:
 
     def add_address(self, address: HomeAddress):
         pass
-    
+
     def edit_phone(self, old_phone: Phone, new_phone: Phone):
         pass
 
