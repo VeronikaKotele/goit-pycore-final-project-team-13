@@ -29,7 +29,7 @@ class CommandsHandler:
         self.commands["remove-phone"].function = self.__remove_phone
         self.commands["add-birthday"].function = self.__add_birthday
         self.commands["add-address"].function = self.__add_address
-        self.commands["birthdays"].function = self.__upcoming_birthdays
+        self.commands["upcoming-birthdays"].function = self.__upcoming_birthdays
         self.commands["search"].function = self.__show_contact
         self.commands["delete"].function = self.__delete_contact
         self.commands["all"].function = self.__show_all_contacts
@@ -51,9 +51,9 @@ class CommandsHandler:
         self.address_book_manager.add_birthday(name, Birthday(birthday))
         return f"Birthday {birthday} added for contact {name}."
 
-    def __add_address(self, name, address) -> str:
-        self.address_book_manager.add_address(name, HomeAddress(address))
-        return f"Address {address} added for contact {name}."
+    def __add_address(self, name, **args) -> str:
+        self.address_book_manager.add_address(name, HomeAddress(args))
+        return f"Address {args} added for contact {name}."
 
     def __upcoming_birthdays(self, days) -> str:
         birthdays = self.address_book_manager.get_upcoming_birthdays(int(days))
@@ -71,9 +71,9 @@ class CommandsHandler:
         self.address_book_manager.delete(name)
         return f"Contact '{name}' deleted."
 
-    def __add_note(self, title, content) -> str:
-        self.notes_manager.add_note(title, content)
-        return f"Note '{title}' added."
+    def __add_note(self, **args) -> str:
+        self.notes_manager.add_note(**args)
+        return "Note is added."
 
     def __update_note(self, title, content) -> str:
         note = self.notes_manager.find(title)

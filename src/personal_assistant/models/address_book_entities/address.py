@@ -1,8 +1,8 @@
 class HomeAddress:
-    def __init__(self, value: str):
+    def __init__(self, **args):
         try:
             # todo: validate address format
-            self.value = value
+            self.value = " ".join(args.values())
         except ValueError:
             raise ValueError("Invalid format for address.")
 
