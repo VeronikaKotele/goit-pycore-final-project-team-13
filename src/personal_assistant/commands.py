@@ -63,7 +63,7 @@ class CommandsHandler:
         note = self.notes_manager.find(title)
         if not note:
             raise KeyError(f"Note with title '{title}' not found.")
-        note = content
+        self.notes_manager.update(title, content)
         return f"Note '{title}' updated. New content: {self.notes_manager.find(title)}"
 
     def __delete_note(self, title):
