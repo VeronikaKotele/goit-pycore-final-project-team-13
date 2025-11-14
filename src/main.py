@@ -1,78 +1,58 @@
-from personal_assistant.commands import commands
+"""
+Personal Assistant Bot - Main Module
+
+This module provides the main entry point for a personal assistant bot that manages
+contacts and notes. The bot provides an interactive command-line interface for users
+to perform various operations on their contacts and notes.
+
+The bot supports commands for:
+- Managing contacts (adding phones, birthdays, addresses)
+- Managing notes (creating, updating, deleting notes)
+- Viewing contact and note information
+"""
+
+from personal_assistant import CommandsHandler
+from personal_assistant import show_help
 
 def parse_input(user_input):
     """
-    Parses the user's input string into a command and a list of arguments.
-    """
+    Parse user input into command and arguments.
     
+    Takes a user input string and separates it into a command and its arguments.
+    The command is converted to lowercase for case-insensitive matching.
+    """
     parts = user_input.strip().split()
     cmd = parts[0].lower() if parts else ""
     args = parts[1:]
-    return cmd, args   
-
-def load_data(filename):
-    return object()  # placeholder for loading logic
-
-def save_data(filename, data):
-    return object()  # placeholder for saving logic
+    return cmd, args
 
 def main():
     """
-    Main interactive part of the Assistant bot.
+    Main interactive loop of the Personal Assistant bot.
+    The loop continues until the user enters an exit command, processing each
+    command through the CommandsHandler and displaying appropriate responses.
     """
 
-    book = load_data("addressbook.pkl")
-    notes = load_data("notes.pkl")
+    commands_handler = CommandsHandler()
+    print("Welcome! I am your assistant bot. You can manage your contacts and notes here.")
+    show_help()
 
-    print("Welcome! I am your assistant bot.")
-
-    if book:
-        print("Address book successfully loaded.")
-    else:
-        print("A new address book has been created.")
-
-    if notes:
-        print("Notes loaded.")
-    else:
-        print("A new notebook created.")
-        
     while True:
         user_input = input("Enter a command: ").lower().strip()
         cmd_name, args = parse_input(user_input)
- 
-        if cmd_name in ["exit", "close"]:
-            save_data("addressbook.pkl", book)
-            save_data("notes.pkl", notes)
+
+        if cmd_name in ["hi", "hello"]:
+            print("How can I help you?")
+            continue
+        elif cmd_name in ["exit", "close"]:
             print("Goodbye!")
             break
-        
-        elif cmd_name == "hello":
-            print("How can I help you?")
 
-        elif cmd_name not in commands.keys():
-            print("Unknown command. Please try again.")
-            continue
-
-        # execute command
-        command = commands[cmd_name]
-        try:
-            expected_args = command.get("arguments", 0)
-            if len(args) != expected_args:
-                print(f"Expected {expected_args} arguments, got {len(args)}.")
-                continue
-
-            command.get("command")(args, book)
-
-        except ValueError as ve:
-            print(f"Value error: {ve}")
-        except KeyError:
-            print("Contact not found.")
-        except IndexError:
-            print(f"Not enough arguments. Format: <command> [arguments].")
-        except Exception as e:
-            print(f"Error executing command '{cmd_name}': {e}")
-
-    # todo: cleanup resources
+        response = commands_handler.execute_command(cmd_name, args)
+        if response.is_error:
+            print(f"Error: {response.message}")
+        else:
+            print(response.message)
 
 
 if __name__ == "__main__":

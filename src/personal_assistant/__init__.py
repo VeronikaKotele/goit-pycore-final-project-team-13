@@ -20,9 +20,9 @@ Authors: Team 13 (Veronika, Ilona, Vitalii)
 Project: GoIT Python Core Final Project
 """
 
-from . import commands
-from . import commands_palette
 from .managers import AddressBookManager, NotesManager
 from .models import AddressBook, Notebook, AddressBookRecord, HomeAddress, Phone, Birthday, Email
+from .commands import CommandsHandler
+from .commands_palette import show_help
 
-__all__ = ['commands', 'commands_palette', 'AddressBookManager', 'NotesManager', 'AddressBook', 'Notebook', 'AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday', 'Email']
+__all__ = ['AddressBookManager', 'NotesManager', 'AddressBook', 'Notebook', 'AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday', 'Email', 'CommandsHandler', 'show_help']
