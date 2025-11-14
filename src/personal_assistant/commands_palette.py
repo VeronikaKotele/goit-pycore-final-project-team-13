@@ -7,9 +7,21 @@ COMMANDS = {
         "desc": "Greets the user.",
         "example": "hello"
     },
-    "add": {
-        "desc": "Add a new contact (name, phone, email, birthday, address).",
-        "example": "add John 1234567890 john@email.com 01.01.1990 SomeStreet"
+    "add-phone": {
+        "desc": "Add a phone number to a contact).",
+        "example": "add-phone John 1234567890"
+    },
+    "add-birthday": {
+        "desc": "Add a birthday to a contact.",
+        "example": "add-birthday John 01.01.1990"
+    },
+    "add-address": {
+        "desc": "Add an address to a contact.",
+        "example": "add-address John 123 Main St"
+    },
+    "remove-phone": {
+        "desc": "Remove a phone number from a contact.",
+        "example": "remove-phone John 1234567890"
     },
     "upcoming-birthday": {
         "desc": "Show contacts with birthdays in the next N days.",
@@ -18,10 +30,6 @@ COMMANDS = {
     "search": {
         "desc": "Search for a contact by name.",
         "example": "search John"
-    },
-    "edit": {
-        "desc": "Edit a contact's phone/email/address.",
-        "example": "edit John 1234567890 0987654321"
     },
     "delete": {
         "desc": "Delete a contact.",
@@ -33,23 +41,23 @@ COMMANDS = {
     },
     "add-note": {
         "desc": "Add a new note.",
-        "example": "add-note Buy milk"
+        "example": "add-note shopping_list Buy milk"
     },
     "search-note": {
-        "desc": "Search notes by keyword.",
-        "example": "search-note milk"
+        "desc": "Search notes by title.",
+        "example": "search-note shopping_list"
     },
-    "edit-note": {
-        "desc": "Edit an existing note.",
-        "example": "edit-note 1 Buy bread instead"
+    "update-note": {
+        "desc": "Edit an existing note - override by title.",
+        "example": "update-note shopping_list Buy bread instead"
     },
     "delete-note": {
         "desc": "Delete a note.",
-        "example": "delete-note 1"
+        "example": "delete-note shopping_list"
     },
-    "save": {
-        "desc": "Save all data to disk.",
-        "example": "save"
+    "all-notes": {
+        "desc": "Show all notes.",
+        "example": "all-notes"
     },
     "exit / close": {
         "desc": "Exit the assistant and save data.",
@@ -73,6 +81,3 @@ def show_help():
             f"{Fore.YELLOW}Example: {info['example']}{Style.RESET_ALL}"
         )
     print()
-
-
-show_help()

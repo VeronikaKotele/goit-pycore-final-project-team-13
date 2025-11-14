@@ -1,5 +1,6 @@
 from .managers import AddressBookManager, NotesManager
 from .models import HomeAddress, Phone, Birthday
+from .commands_palette import COMMANDS
 
 class CommandsHandler:
     """
@@ -49,6 +50,10 @@ class CommandsHandler:
         if contact is None:
             raise KeyError(f"Contact with name '{name}' not found.")
         return str(contact)
+    
+    def __delete_contact(self, name) -> str:
+        self.address_book_manager.delete(name)
+        return f"Contact '{name}' deleted."
 
     def __add_note(self, title, content) -> str:
         self.notes_manager.add_note(title, content)
@@ -71,61 +76,30 @@ class CommandsHandler:
             raise KeyError(f"Note with title '{title}' not found.")
         return f"Note '{title}': {note}"
 
-    def __show_all(self):
-        return f"Contacts:\n{self.address_book_manager}\n\nNotes:\n{self.notes_manager}"
+    def __show_all_contacts(self):
+        return str(self.address_book_manager)
 
+    def __show_all_notes(self):
+        return str(self.notes_manager)
+
+    COMMANDS["add-phone"].function = __add_phone
+    COMMANDS["remove-phone"].function = __remove_phone
+    COMMANDS["add-birthday"].function = __add_birthday
+    COMMANDS["add-address"].function = __add_address
+    COMMANDS["birthdays"].function = __upcoming_birthdays
+    COMMANDS["search"].function = __show_contact
+    COMMANDS["delete"].function = __delete_contact
+    COMMANDS["all"].function = __show_all_contacts
+    COMMANDS["add-note"].function = __add_note
+    COMMANDS["search-note"].function = __show_note
+    COMMANDS["update-note"].function = __update_note
+    COMMANDS["delete-note"].function = __delete_note
+    COMMANDS["all-notes"].function = __show_all_notes
 
     class Response:
-        """
-        Represents a command execution response.
-        
-        This class encapsulates the result of a command execution, including
-        the response message and whether an error occurred.
-        
-        Attributes:
-            message (str): The response message to display to the user
-            is_error (bool): True if the response represents an error condition
-        """
-
         def __init__(self, message: str, is_error: bool = False):
             self.message = message
             self.is_error = is_error
-
-
-    class Command:
-        """
-        Represents a command with its metadata.
-        
-        This class stores information about a command including its function,
-        argument requirements, and description for help functionality.
-        
-        Attributes:
-            function (callable): The function to execute for this command
-            arg_count (int): Number of arguments the command expects
-            arguments (tuple): Names of the command arguments
-            description (str): Human-readable description of the command
-        """
-
-        def __init__(self, function: callable, description: str):
-            self.function = function
-            self.arg_count = function.__code__.co_argcount - 1  # exclude 'self'
-            self.arguments = function.__code__.co_varnames[1:self.arg_count + 1]  # exclude 'self'
-            self.description = description
-
-
-    commands = {
-        "add-phone":        Command(__add_phone, "Add a phone number to a contact"),
-        "add-birthday":     Command(__add_birthday, "Add a birthday to a contact"),
-        "add-address":      Command(__add_address, "Add an address to a contact"),
-        "remove-phone":     Command(__remove_phone, "Remove a phone number from a contact"),
-        "show-contact":     Command(__show_contact, "Show contact details"),
-        "birthdays":        Command(__upcoming_birthdays, "Show upcoming birthdays"),
-        "add-note":         Command(__add_note, "Add a note"),
-        "update-note":      Command(__update_note, "Update a note"),
-        "delete-note":      Command(__delete_note, "Delete a note"),
-        "show-note":        Command(__show_note, "Show a note"),
-        "show-all":         Command(__show_all, "Show all contacts and notes"),
-    }
 
     def execute_command(self, cmd_name, args) -> Response:
         """
@@ -141,12 +115,13 @@ class CommandsHandler:
         Returns:
             Response: Response object containing the result or error message
         """
-        if cmd_name not in CommandsHandler.commands:
+        if cmd_name not in COMMANDS:
             return CommandsHandler.Response("Unknown command", is_error=True)
 
-        command = self.commands[cmd_name]
-        if len(args) != command.arg_count:
-            return CommandsHandler.Response(f"Arguments error: Expected {command.arg_count} arguments, got {len(args)}.", is_error=True)
+        command = COMMANDS[cmd_name]
+        expected_arg_count = command.function.__code__.co_argcount - 1  # exclude 'self'
+        if len(args) != expected_arg_count:
+            return CommandsHandler.Response(f"Arguments error: Expected {expected_arg_count} arguments, got {len(args)}.", is_error=True)
 
         try:
             result = command.function(self, *args)
@@ -157,9 +132,3 @@ class CommandsHandler:
             return CommandsHandler.Response(f"Key error: {ke}", is_error=True)
         except Exception as e:
             return CommandsHandler.Response(f"Error: {e}", is_error=True)
-
-    def show_all_commands(self) -> str:
-        return "Available commands:\n" + \
-            "| command name         | arguments               | description                              |\n" + \
-            "|----------------------|-------------------------|------------------------------------------|\n" + \
-            "\n".join(f"| {name:<20} | {(', '.join(command.arguments)):<23} | {command.description:40} |" for name, command in self.commands.items())

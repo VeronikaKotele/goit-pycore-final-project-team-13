@@ -12,6 +12,7 @@ The bot supports commands for:
 """
 
 from personal_assistant import CommandsHandler
+from personal_assistant import show_help
 
 def parse_input(user_input):
     """
@@ -34,7 +35,7 @@ def main():
 
     commands_handler = CommandsHandler()
     print("Welcome! I am your assistant bot. You can manage your contacts and notes here.")
-    print(commands_handler.show_all_commands())
+    print(show_help())
 
     while True:
         user_input = input("Enter a command: ").lower().strip()
