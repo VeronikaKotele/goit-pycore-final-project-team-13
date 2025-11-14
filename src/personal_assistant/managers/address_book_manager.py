@@ -1,17 +1,6 @@
 from personal_assistant.models import AddressBook, AddressBookRecord, Phone, Birthday, HomeAddress
 
 class AddressBookManager:
-    """
-    High-level manager for address book operations.
-    
-    This class provides a simplified interface for managing contacts in the address book.
-    It handles creation, modification, and retrieval of contact records, including
-    managing phone numbers, birthdays, and addresses.
-    
-    Attributes:
-        __address_book (AddressBook): The underlying address book storage
-    """
-    
     def __init__(self):
         self.__address_book = AddressBook()
 
