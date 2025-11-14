@@ -39,7 +39,10 @@ class NotesManager:
         Note:
             This method is currently not implemented.
         """
-        pass
+        note_exists = self.__notebook.get(title)
+        if note_exists:
+            raise ValueError(f"Note with title '{title}' already exists.")
+        self.__notebook[title] = note
 
     def find(self, title: str):
         """
