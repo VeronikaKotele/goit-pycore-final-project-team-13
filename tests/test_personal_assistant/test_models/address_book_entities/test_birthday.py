@@ -1,16 +1,29 @@
-from datetime import datetime
+import unittest
+import sys
+import os
 
-class Birthday:
-    def __init__(self, value: str):
-        try:
-            date = datetime.strptime(value, "%d.%m.%Y")
-        except ValueError:
-            raise ValueError("Invalid date format. Use DD.MM.YYYY")
+# Add the src directory to Python path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'src'))
 
-        if date > datetime.now():
-            raise ValueError("Birthday cannot be in the future")
+from personal_assistant.models import Birthday
 
-        self.value = date
+class TestBirthday(unittest.TestCase):
+    def test_birthday_creation(self):
+        bday = Birthday("30.10.2001")
+        self.assertEqual(str(bday), "30.10.2001")
 
-    def __str__(self):
-        return self.value.strftime("%d.%m.%Y")
+    def test_birthday_invalid_format(self):
+        with self.assertRaises(ValueError):
+            Birthday("01-01-1990")
+
+    def test_birthday_invalid_format(self):
+        with self.assertRaises(ValueError):
+            Birthday("1990.01.01")
+
+    def test_birthday_in_future(self):
+        future_date = "01.01.3000"
+        with self.assertRaises(ValueError):
+            Birthday(future_date)
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
