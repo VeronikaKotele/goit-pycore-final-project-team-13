@@ -38,7 +38,7 @@ def main():
 
     commands_handler = CommandsHandler()
     print("Welcome! I am your assistant bot. You can manage your contacts and notes here.")
-    print(commands_handler.execute_command("help", "").message)
+    print(commands_handler.get_help())
 
     while True:
         user_input = input("Enter a command: ")

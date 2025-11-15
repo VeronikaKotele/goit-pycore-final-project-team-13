@@ -88,14 +88,14 @@ def get_help_message(command_name:str=None):
     """
     message = "\n📖 Command Palette:"
     for cmd, info in COMMANDS.items():
-        if (command_name and cmd != command_name):
+        if command_name and cmd != command_name:
             continue
 
         message += (
             f"{Fore.BLUE}{cmd:<15} - "
             f"{Fore.WHITE}{info['desc']:<60}"
         )
-        if ('args' in info):
+        if 'args' in info:
             args_str = ", ".join(info['args'])
             message += f"{Fore.BLUE} Args: ({args_str})."
         if 'example' in info:

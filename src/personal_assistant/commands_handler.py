@@ -26,7 +26,7 @@ class CommandsHandler:
 
         # Map command names to their handler methods
         self.commands = COMMANDS.copy()
-        self.commands["help"].function = get_help_message
+        self.commands["help"].function = self.get_help
         self.commands["add-phone"].function = self.__add_phone
         self.commands["remove-phone"].function = self.__remove_phone
         self.commands["add-birthday"].function = self.__add_birthday
@@ -98,6 +98,9 @@ class CommandsHandler:
 
     def __show_all_notes(self):
         return str(self.notes_manager)
+    
+    def get_help(self) -> str:
+        return get_help_message()
 
     Response = namedtuple('Response', ['message', 'is_error', 'should_exit'])
 
