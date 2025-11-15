@@ -24,7 +24,7 @@ class CommandsHandler:
         self.notes_manager = NotesManager()
 
         # Map command names to their handler methods
-        self.commands = COMMANDS
+        self.commands = COMMANDS.copy()
         self.commands["add-phone"].function = self.__add_phone
         self.commands["remove-phone"].function = self.__remove_phone
         self.commands["add-birthday"].function = self.__add_birthday
@@ -52,14 +52,16 @@ class CommandsHandler:
         return f"Birthday {birthday} added for contact {name}."
 
     def __add_address(self, name, **args) -> str:
-        self.address_book_manager.add_address(name, HomeAddress(args))
+        self.address_book_manager.add_address(name, HomeAddress(**args))
         return f"Address {args} added for contact {name}."
 
     def __upcoming_birthdays(self, days) -> str:
         birthdays = self.address_book_manager.get_upcoming_birthdays(int(days))
         if not birthdays:
-            return "No upcoming birthdays."
-        return "Upcoming birthdays:\n" + "\n".join(birthdays)
+            return f"No upcoming birthdays in {days} days."
+        return "Upcoming birthdays:\n" + "\n".join(
+            f"\t{b['name']} - {b['next_date']} (turning {b['years_reached']})" for b in birthdays
+        )
 
     def __show_contact(self, name) -> str:
         contact = self.address_book_manager.find(name)
@@ -76,9 +78,6 @@ class CommandsHandler:
         return "Note is added."
 
     def __update_note(self, title, content) -> str:
-        note = self.notes_manager.find(title)
-        if not note:
-            raise KeyError(f"Note with title '{title}' not found.")
         self.notes_manager.update(title, content)
         return f"Note '{title}' updated. New content: {self.notes_manager.find(title)}"
 
@@ -103,7 +102,7 @@ class CommandsHandler:
             self.message = message
             self.is_error = is_error
 
-    def execute_command(self, cmd_name, args) -> Response:
+    def execute_command(self, cmd_name, **args) -> Response:
         """
         Execute a command with the given arguments.
         

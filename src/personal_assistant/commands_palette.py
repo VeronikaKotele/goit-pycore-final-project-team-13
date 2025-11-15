@@ -59,9 +59,13 @@ COMMANDS = {
         "desc": "Show all notes.",
         "example": "all-notes"
     },
-    "exit / close": {
+    "exit": {
         "desc": "Exit the assistant and save data.",
         "example": "exit"
+    },
+    "close": {
+        "desc": "Exit the assistant and save data.",
+        "example": "close"
     }
 }
 
