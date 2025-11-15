@@ -5,7 +5,9 @@ init(autoreset=True)
 COMMANDS = {
     "hello": {
         "desc": "Greets the user.",
-        "example": "hello"
+    },
+    "help": {
+        "desc": "Show this command palette.",
     },
     "add-phone": {
         "desc": "Add a phone number to a contact).",
@@ -37,7 +39,6 @@ COMMANDS = {
     },
     "all": {
         "desc": "Show all contacts.",
-        "example": "all"
     },
     "add-note": {
         "desc": "Add a new note.",
@@ -57,31 +58,30 @@ COMMANDS = {
     },
     "all-notes": {
         "desc": "Show all notes.",
-        "example": "all-notes"
     },
     "exit": {
         "desc": "Exit the assistant and save data.",
-        "example": "exit"
     },
     "close": {
         "desc": "Exit the assistant and save data.",
-        "example": "close"
     }
 }
 
 
-def show_help():
+def get_help_message(command_name:str=None):
     """
     Prints the command palette with colors:
     - Command name in green
     - Description in orange
     - Example usage in yellow
     """
-    print("\n📖 Command Palette:")
+    message = "\n📖 Command Palette:"
     for cmd, info in COMMANDS.items():
-        print(
+        if (command_name and cmd != command_name):
+            continue
+        message += (
             f"{Fore.GREEN}{cmd:<15}{Style.RESET_ALL} - "
             f"{Fore.LIGHTRED_EX}{info['desc']:<60}{Style.RESET_ALL} "
-            f"{Fore.YELLOW}Example: {info['example']}{Style.RESET_ALL}"
+            f"{Fore.YELLOW}Example: {info['example']}{Style.RESET_ALL}\n"
         )
-    print()
+    return message

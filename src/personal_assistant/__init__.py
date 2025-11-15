@@ -22,7 +22,6 @@ Project: GoIT Python Core Final Project
 
 from .managers import AddressBookManager, NotesManager
 from .models import AddressBook, Notebook, AddressBookRecord, HomeAddress, Phone, Birthday, Email
-from .commands import CommandsHandler
-from .commands_palette import show_help
+from .commands_handler import CommandsHandler
 
-__all__ = ['AddressBookManager', 'NotesManager', 'AddressBook', 'Notebook', 'AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday', 'Email', 'CommandsHandler', 'show_help']
+__all__ = ['AddressBookManager', 'NotesManager', 'AddressBook', 'Notebook', 'AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday', 'Email', 'CommandsHandler']

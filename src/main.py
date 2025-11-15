@@ -10,20 +10,23 @@ The bot supports commands for:
 - Managing notes (creating, updating, deleting notes)
 - Viewing contact and note information
 """
-
+import shlex
 from personal_assistant import CommandsHandler
-from personal_assistant import show_help
 
 def parse_input(user_input):
     """
-    Parse user input into command and arguments.
-    
-    Takes a user input string and separates it into a command and its arguments.
-    The command is converted to lowercase for case-insensitive matching.
+    Parse the user input into a command and its arguments.
+    Splits the input string by spaces while respecting quoted substrings,
+    allowing for multi-word arguments enclosed in quotes.
+    Args:
+        user_input (str): The raw input string from the user.
+    Returns:
+        tuple: A tuple containing the command name and arguments.
     """
-    parts = user_input.strip().split()
+    parts = shlex.split(user_input)
     cmd = parts[0].lower() if parts else ""
-    args = parts[1:]
+    args = parts[1:] if len(parts) > 1 else []
+
     return cmd, args
 
 def main():
@@ -35,25 +38,23 @@ def main():
 
     commands_handler = CommandsHandler()
     print("Welcome! I am your assistant bot. You can manage your contacts and notes here.")
-    show_help()
+    print(commands_handler.execute_command("help", "").message)
 
     while True:
-        user_input = input("Enter a command: ").lower().strip()
-        cmd_name, args = parse_input(user_input)
-
-        if cmd_name in ["hi", "hello"]:
-            print("How can I help you?")
+        user_input = input("Enter a command: ")
+        cmd, args = parse_input(user_input)
+        if not cmd:
+            print("Please enter a command.")
             continue
-        elif cmd_name in ["exit", "close"]:
-            print("Goodbye!")
-            break
 
-        response = commands_handler.execute_command(cmd_name, args)
+        response = commands_handler.execute_command(cmd, args)
         if response.is_error:
             print(f"Error: {response.message}")
         else:
             print(response.message)
 
+        if response.should_exit:
+            break
 
 if __name__ == "__main__":
     main()
