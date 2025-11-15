@@ -10,7 +10,7 @@ COMMANDS = {
         "desc": "Show this command palette.",
     },
     "add-phone": {
-        "desc": "Add a phone number to a contact).",
+        "desc": "Add a phone number to a contact.",
         "args": ["name", "phone"],
         "example": "add-phone John 1234567890"
     },
