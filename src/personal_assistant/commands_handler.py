@@ -52,8 +52,8 @@ class CommandsHandler:
         self.address_book_manager.add_birthday(name, Birthday(birthday))
         return f"Birthday {birthday} added for contact {name}."
 
-    def __add_address(self, name, **args) -> str:
-        self.address_book_manager.add_address(name, HomeAddress(**args))
+    def __add_address(self, name, *args) -> str:
+        self.address_book_manager.add_address(name, HomeAddress(*args))
         return f"Address {args} added for contact {name}."
 
     def __upcoming_birthdays(self, days) -> str:
@@ -74,8 +74,8 @@ class CommandsHandler:
         self.address_book_manager.delete(name)
         return f"Contact '{name}' deleted."
 
-    def __add_note(self, **args) -> str:
-        self.notes_manager.add_note(**args)
+    def __add_note(self, *args) -> str:
+        self.notes_manager.add_note(*args)
         return "Note is added."
 
     def __update_note(self, title, content) -> str:

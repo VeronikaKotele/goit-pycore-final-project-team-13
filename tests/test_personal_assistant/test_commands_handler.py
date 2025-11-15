@@ -94,7 +94,7 @@ class TestCommandsHandler(unittest.TestCase):
         """Test add-address command via execute_command."""
         with patch.object(self.handler.address_book_manager, 'add_address') as mock_add_address:
             # This test may fail if the command parsing doesn't match expected args
-            # The add-address method uses **args which suggests complex argument parsing
+            # The add-address method uses *args which suggests complex argument parsing
             try:
                 response = self.handler.execute_command("add-address", ["John", "123 Main St"])
                 if not response.is_error:
@@ -160,7 +160,7 @@ class TestCommandsHandler(unittest.TestCase):
     def test_add_note_via_execute_command(self):
         """Test add-note command via execute_command."""
         with patch.object(self.handler.notes_manager, 'add_note') as mock_add_note:
-            # The add-note method uses **args which suggests complex argument parsing
+            # The add-note method uses *args which suggests complex argument parsing
             try:
                 response = self.handler.execute_command("add-note", ["Test Note", "Test content"])
                 if not response.is_error:

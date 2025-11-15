@@ -1,40 +1,67 @@
-from .phone import Phone
-from .birthday import Birthday
-from .address import HomeAddress
-from .email import Email
+import unittest
+import sys
+import os
 
-class AddressBookRecord:
-    def __init__(self, name: str):
-        self.name = name
-        self.phones = []
-        self.birthday = None
-        self.address = None
-        self.email = None
+# Add the src directory to Python path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'src'))
 
-    def add_phone(self, phone: Phone):
-        if phone in self.phones:
-            raise ValueError(f"Phone number {phone} already exists for contact {self.name}.")
-        self.phones.append(phone)
+from personal_assistant.models import AddressBookRecord, Phone, Birthday, HomeAddress, Email
 
-    def add_birthday(self, date: Birthday):
-        self.birthday = date
+class TestAddressBookRecord(unittest.TestCase):
+    def setUp(self):
+        self.record = AddressBookRecord("John Doe")
 
-    def add_address(self, address: HomeAddress):
-        self.address = address
+    def test_add_phone(self):
+        phone = Phone("1234567890")
+        self.record.add_phone(phone)
+        self.assertIn(phone, self.record.phones)
 
-    def edit_phone(self, old_phone: Phone, new_phone: Phone):
-        try:
-            phone_index = self.phones.index(old_phone)
-            self.phones[phone_index] = new_phone
-        except ValueError:
-            raise ValueError(f"Phone number {old_phone} does not exist for contact {self.name}.")
+    def test_add_duplicate_phone_raises(self):
+        phone = Phone("1234567890")
+        self.record.add_phone(phone)
+        with self.assertRaises(ValueError):
+            self.record.add_phone(phone)
 
-    def add_email(self, email: Email):
-        self.email = email
+    def test_add_birthday(self):
+        birthday = Birthday("01.01.1990")
+        self.record.add_birthday(birthday)
+        self.assertEqual(self.record.birthday, birthday)
 
-    def __str__(self):
-        phones_str = ", Phones: [" + ", ".join(str(phone) for phone in self.phones) + "]" if self.phones else ""
-        birthday_str = ", Birthday: " + str(self.birthday) if self.birthday else ""
-        address_str = ", Address: " + str(self.address) if self.address else ""
-        email_str = ", Email: " + str(self.email) if self.email else ""
-        return f"Name: {self.name}{phones_str}{birthday_str}{address_str}{email_str}"
+    def test_edit_phone(self):
+        old_phone = Phone("1234567890")
+        new_phone = Phone("0987654321")
+        self.record.add_phone(old_phone)
+        self.record.edit_phone(old_phone, new_phone)
+        self.assertIn(new_phone, self.record.phones)
+        self.assertNotIn(old_phone, self.record.phones)
+
+    def test_edit_nonexistent_phone_raises(self):
+        old_phone = Phone("1234567890")
+        new_phone = Phone("0987654321")
+        with self.assertRaises(ValueError):
+            self.record.edit_phone(old_phone, new_phone)
+
+    def test_add_email(self):
+        email = Email("john.doe@example.com")
+        self.record.add_email(email)
+        self.assertEqual(email, self.record.email)
+
+    def test_add_home_address(self):
+        address = HomeAddress("123 Main St")
+        self.record.add_address(address)
+        self.assertEqual(self.record.address, address)
+
+    def test_str_representation(self):
+        phone = Phone("1234567890")
+        birthday = Birthday("31.01.1990")
+        address = HomeAddress("123 Main St")
+        email = Email("john.doe@example.com")
+        self.record.add_phone(phone)
+        self.record.add_birthday(birthday)
+        self.record.add_address(address)
+        self.record.add_email(email)
+        expected_str = "Name: John Doe, Phones: [1234567890], Birthday: 31.01.1990, Address: 123 Main St, Email: john.doe@example.com"
+        self.assertEqual(str(self.record), expected_str)
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
