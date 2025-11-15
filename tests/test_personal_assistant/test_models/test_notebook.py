@@ -1,15 +1,28 @@
-from .interfaces import CacheableDict
+import unittest
+import sys
+import os
 
-class Notebook(CacheableDict):
-    """
-    A notebook for storing and managing notes with automatic persistence.
-    
-    This class extends CacheableDict to provide a specialized storage container
-    for notes. Notes are automatically persisted to 'notes_state.pkl' file.
-    """
-    
-    def __init__(self):
-        CacheableDict.__init__(self, "notes_state.pkl")
+# Add the src directory to Python path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', 'src'))
 
-    def __str__(self):
-        return "\n".join(str(record) for record in self.data.values())
+from personal_assistant.models import Notebook
+
+class TestNotebook(unittest.TestCase):
+    def setUp(self):
+        self.notebook = Notebook()
+
+    def tearDown(self):
+        if os.path.exists("notebook_state.pkl"):
+            os.remove("notebook_state.pkl")
+
+    def test_add_string(self):
+        self.notebook["ToDo list"] = "Buy milk"
+        self.assertIn("ToDo list", self.notebook.keys())
+        self.assertEqual(self.notebook["ToDo list"], "Buy milk")
+
+    def test_add_not_string_raises(self):
+        with self.assertRaises(TypeError):
+            self.notebook["ToDo list"] = 12345  # Not a string
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)

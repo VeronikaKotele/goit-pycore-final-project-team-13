@@ -11,5 +11,10 @@ class Notebook(CacheableDict):
     def __init__(self):
         CacheableDict.__init__(self, "notes_state.pkl")
 
+    def __setitem__(self, key, value):
+        if not isinstance(value, str):
+            raise TypeError("Only string values are allowed in Notebook.")
+        super().__setitem__(key, value)
+
     def __str__(self):
         return "\n".join(str(record) for record in self.data.values())

@@ -1,22 +1,28 @@
-from .address_book_entities import AddressBookRecord
-from .interfaces import CacheableDict
+import unittest
+import sys
+import os
 
-class AddressBook(CacheableDict):
-    """
-    An address book for storing and managing contacts with automatic persistence.
-    
-    This class extends CacheableDict to provide a specialized storage container
-    for contact records. Contacts are automatically persisted to 'addressbook_state.pkl'
-    file and type validation ensures only AddressBookRecord instances are stored.
-    """
-    
-    def __init__(self):
-        CacheableDict.__init__(self, "addressbook_state.pkl")
+# Add the src directory to Python path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', 'src'))
 
-    def __setitem__(self, name, record: AddressBookRecord):
-        if not isinstance(record, AddressBookRecord):
-            raise TypeError("Item must be an instance of Record")
-        self.data[name] = record
+from personal_assistant.models import AddressBook, AddressBookRecord
 
-    def __str__(self):
-        return "\n".join(str(record) for record in self.data.values())
+class TestAddressBook(unittest.TestCase):
+    def setUp(self):
+        self.address_book = AddressBook()
+
+    def tearDown(self):
+        if os.path.exists("addressbook_state.pkl"):
+            os.remove("addressbook_state.pkl")
+
+    def test_add_record(self):
+        self.address_book["John Doe"] = AddressBookRecord("John Doe")
+        self.assertIn("John Doe", self.address_book.keys())
+        self.assertEqual(self.address_book["John Doe"], self.address_book["John Doe"])
+
+    def test_add_invalid_record_raises(self):
+        with self.assertRaises(TypeError):
+            self.address_book["Jane Doe"] = "Not a Record"
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
