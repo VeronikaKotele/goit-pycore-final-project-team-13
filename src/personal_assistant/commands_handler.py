@@ -1,6 +1,7 @@
+from collections import namedtuple
 from .managers import AddressBookManager, NotesManager
 from .models import HomeAddress, Phone, Birthday
-from .commands_palette import COMMANDS
+from .commands_palette import COMMANDS, get_help_message
 
 class CommandsHandler:
     """
@@ -25,6 +26,7 @@ class CommandsHandler:
 
         # Map command names to their handler methods
         self.commands = COMMANDS.copy()
+        self.commands["help"].function = self.get_help
         self.commands["add-phone"].function = self.__add_phone
         self.commands["remove-phone"].function = self.__remove_phone
         self.commands["add-birthday"].function = self.__add_birthday
@@ -96,13 +98,17 @@ class CommandsHandler:
 
     def __show_all_notes(self):
         return str(self.notes_manager)
+    
+    def get_help(self) -> str:
+        return get_help_message()
 
     class Response:
-        def __init__(self, message: str, is_error: bool = False):
+        def __init__(self, message, is_error=False, should_exit=False):
             self.message = message
             self.is_error = is_error
+            self.should_exit = should_exit
 
-    def execute_command(self, cmd_name, **args) -> Response:
+    def execute_command(self, cmd_name: str, args: list[str]) -> Response:
         """
         Execute a command with the given arguments.
         
@@ -111,18 +117,25 @@ class CommandsHandler:
         
         Args:
             cmd_name (str): The name of the command to execute
-            args (list): List of arguments for the command
+            rest_of_input (str): The remaining input string after the command name
             
         Returns:
             Response: Response object containing the result or error message
         """
         if cmd_name not in self.commands:
             return CommandsHandler.Response("Unknown command", is_error=True)
+        elif cmd_name in ["hi", "hello"]:
+            return CommandsHandler.Response("How can I help you?")
+        elif cmd_name in ["exit", "close"]:
+            return CommandsHandler.Response("Goodbye!", should_exit=True)
 
         command = self.commands[cmd_name]
-        expected_arg_count = command.function.__code__.co_argcount - 1  # exclude 'self'
-        if len(args) != expected_arg_count:
-            return CommandsHandler.Response(f"Arguments error: Expected {expected_arg_count} arguments, got {len(args)}.", is_error=True)
+        expected_args_count = command.function.__code__.co_argcount - 1  # exclude 'self'
+        if len(args) != expected_args_count:
+            return CommandsHandler.Response("Arguments error: " +
+                                            f"Expected {expected_args_count} arguments, got {len(args)}.\n" +
+                                            get_help_message(cmd_name)
+                                            , is_error=True)
 
         try:
             result = command.function(self, *args)
