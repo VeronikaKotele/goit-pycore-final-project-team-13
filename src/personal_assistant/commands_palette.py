@@ -11,30 +11,37 @@ COMMANDS = {
     },
     "add-phone": {
         "desc": "Add a phone number to a contact).",
+        "args": ["name", "phone"],
         "example": "add-phone John 1234567890"
     },
     "add-birthday": {
         "desc": "Add a birthday to a contact.",
+        "args": ["name", "birthday"],
         "example": "add-birthday John 01.01.1990"
     },
     "add-address": {
         "desc": "Add an address to a contact.",
-        "example": "add-address John 123 Main St"
+        "args": ["name", "address"],
+        "example": "add-address John '123 Main St'"
     },
     "remove-phone": {
         "desc": "Remove a phone number from a contact.",
+        "args": ["name", "phone"],
         "example": "remove-phone John 1234567890"
     },
     "upcoming-birthday": {
         "desc": "Show contacts with birthdays in the next N days.",
+        "args": ["days(optional, default=7)"],
         "example": "upcoming-birthday 7"
     },
     "search": {
         "desc": "Search for a contact by name.",
+        "args": ["name"],
         "example": "search John"
     },
     "delete": {
         "desc": "Delete a contact.",
+        "args": ["name"],
         "example": "delete John"
     },
     "all": {
@@ -42,18 +49,22 @@ COMMANDS = {
     },
     "add-note": {
         "desc": "Add a new note.",
+        "args": ["title", "content"],
         "example": "add-note 'shopping_list': 'Buy milk'"
     },
     "search-note": {
         "desc": "Search notes by title.",
+        "args": ["title"],
         "example": "search-note 'shopping_list'"
     },
     "update-note": {
         "desc": "Edit an existing note - override by title.",
+        "args": ["title", "content"],
         "example": "update-note 'shopping_list': 'Buy bread instead'"
     },
     "delete-note": {
         "desc": "Delete a note.",
+        "args": ["title"],
         "example": "delete-note 'shopping_list'"
     },
     "all-notes": {
@@ -79,9 +90,16 @@ def get_help_message(command_name:str=None):
     for cmd, info in COMMANDS.items():
         if (command_name and cmd != command_name):
             continue
+
         message += (
-            f"{Fore.GREEN}{cmd:<15}{Style.RESET_ALL} - "
-            f"{Fore.LIGHTRED_EX}{info['desc']:<60}{Style.RESET_ALL} "
-            f"{Fore.YELLOW}Example: {info['example']}{Style.RESET_ALL}\n"
+            f"{Fore.BLUE}{cmd:<15} - "
+            f"{Fore.WHITE}{info['desc']:<60}"
+        )
+        if ('args' in info):
+            args_str = ", ".join(info['args'])
+            message += f"{Fore.BLUE} Args: ({args_str})."
+        if 'example' in info:
+            message += (
+            f"{Fore.LIGHTBLACK_EX} Example: {info['example']}\n"
         )
     return message
