@@ -102,7 +102,11 @@ class CommandsHandler:
     def get_help(self) -> str:
         return get_help_message()
 
-    Response = namedtuple('Response', ['message', 'is_error', 'should_exit'])
+    class Response:
+        def __init__(self, message, is_error=False, should_exit=False):
+            self.message = message
+            self.is_error = is_error
+            self.should_exit = should_exit
 
     def execute_command(self, cmd_name: str, args: list[str]) -> Response:
         """
