@@ -23,8 +23,11 @@ class AddressBookRecord:
         self.address = address
 
     def edit_phone(self, old_phone: Phone, new_phone: Phone):
-        phone_index = self.phones.index(old_phone)
-        self.phones[phone_index] = new_phone
+        try:
+            phone_index = self.phones.index(old_phone)
+            self.phones[phone_index] = new_phone
+        except ValueError:
+            raise ValueError(f"Phone number {old_phone} does not exist for contact {self.name}.")
 
     def add_email(self, email: Email):
         self.email = email
@@ -34,4 +37,4 @@ class AddressBookRecord:
         birthday_str = ", Birthday: " + str(self.birthday) if self.birthday else ""
         address_str = ", Address: " + str(self.address) if self.address else ""
         email_str = ", Email: " + str(self.email) if self.email else ""
-        return (f"Name: {self.name}{phones_str}{birthday_str}{address_str}{email_str}")
+        return f"Name: {self.name}{phones_str}{birthday_str}{address_str}{email_str}"
