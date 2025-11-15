@@ -1,4 +1,3 @@
-from collections import namedtuple
 from .managers import AddressBookManager, NotesManager
 from .models import HomeAddress, Phone, Birthday
 from .commands_palette import COMMANDS, get_help_message

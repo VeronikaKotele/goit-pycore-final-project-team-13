@@ -189,3 +189,6 @@ class TestParseInput(unittest.TestCase):
         cmd, args = parse_input(input_str)
         self.assertEqual(cmd, "command")
         self.assertEqual(args, long_args)
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
