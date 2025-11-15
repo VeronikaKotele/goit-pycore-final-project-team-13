@@ -1,40 +1,41 @@
-import pickle
-from collections import UserDict
+import unittest
+import sys
+import os
+from unittest.mock import Mock, patch, MagicMock
 
-class CacheableDict(UserDict):
-    """
-    A dictionary with automatic persistence capabilities.
-    
-    This class extends UserDict to provide automatic loading and saving of
-    dictionary data using pickle serialization. Data is loaded from a file
-    during initialization and automatically saved when the object is destroyed.
-    
-    Attributes:
-        __state_storage_filename (str): The filename used for persistence
-    """
+# Add the src directory to Python path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'src'))
 
-    def __init__(self, filename):
-        """
-        Constructor that loads existing dictionary data from the specified file if it exists,
-        otherwise do nothing, so a new empty dictionary is created by default
-        """
-        super().__init__()
-        self.__state_storage_filename = filename
-        UserDict.__init__(self)
-        try:
-            with open(self.__state_storage_filename, "rb") as f:
-                data = pickle.load(f)
-                self.data.update(data)
-                print(f"Cache data loaded from file {self.__state_storage_filename}.")
-        except FileNotFoundError:
-            pass # do nothing
+from personal_assistant.models.interfaces import CacheableDict
 
-    def __del__(self):
-        """
-        Destructor that automatically saves the dictionary data.
-        
-        Uses pickle to serialize the current dictionary data to the storage file.
-        This ensures data persistence when the object is garbage collected.
-        """
-        with open(self.__state_storage_filename, "wb") as f:
-            pickle.dump(self.data, f)
+class TestCacheableDict(unittest.TestCase):
+    def setUp(self):
+        self.pklfile = "test_cache.pkl"
+        if os.path.exists("test_cache.pkl"):
+            os.remove("test_cache.pkl")
+
+    def tearDown(self):
+        if os.path.exists("test_cache.pkl"):
+            os.remove("test_cache.pkl")
+
+    def test_creates_new_when_no_file(self):
+        cacheable_dict = CacheableDict(self.pklfile)
+        self.assertEqual(len(cacheable_dict), 0)
+
+    def test_saves_to_file(self):
+        cacheable_dict = CacheableDict(self.pklfile)
+        cacheable_dict['key1'] = 'value1'
+        del cacheable_dict
+        assert os.path.exists(self.pklfile)
+
+    def test_restore_data_from_file(self):
+        old_dict = CacheableDict(self.pklfile)
+        old_dict['key1'] = 'value1'
+        del old_dict
+
+        cacheable_dict = CacheableDict(self.pklfile)
+        self.assertEqual(len(cacheable_dict), 1)
+        self.assertEqual(cacheable_dict['key1'], 'value1')
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
