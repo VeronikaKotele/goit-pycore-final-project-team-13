@@ -14,6 +14,8 @@ from personal_assistant.models import Phone, Birthday, HomeAddress
 class TestAddressBookManager(unittest.TestCase):
     def setUp(self):
         self.manager = AddressBookManager()
+        # Clear any existing notes from cache to ensure clean test state
+        self.manager._AddressBookManager__address_book.clear()
         self.john_record = self.manager.add_record("John Doe")
 
     def tearDown(self):
