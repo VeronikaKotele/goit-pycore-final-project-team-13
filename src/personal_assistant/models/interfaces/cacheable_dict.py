@@ -28,10 +28,10 @@ class CacheableDict(UserDict):
 
     def save_data_to_cache(self):
         """
-        Destructor that automatically saves the dictionary data.
-        
+        Explicitly saves the current dictionary data to the cache file.
+
         Uses pickle to serialize the current dictionary data to the storage file.
-        This ensures data persistence when the object is garbage collected.
+        Call this method to persist data when needed.
         """
         try:
             with open(self.__state_storage_filename, "wb") as f:
