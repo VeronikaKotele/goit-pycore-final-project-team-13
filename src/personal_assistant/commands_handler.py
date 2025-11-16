@@ -1,4 +1,3 @@
-from collections import namedtuple
 from .managers import AddressBookManager, NotesManager
 from .models import HomeAddress, Phone, Birthday
 from .commands_palette import COMMANDS, get_help_message
@@ -53,8 +52,8 @@ class CommandsHandler:
         self.address_book_manager.add_birthday(name, Birthday(birthday))
         return f"Birthday {birthday} added for contact {name}."
 
-    def __add_address(self, name, **args) -> str:
-        self.address_book_manager.add_address(name, HomeAddress(**args))
+    def __add_address(self, name, *args) -> str:
+        self.address_book_manager.add_address(name, HomeAddress(*args))
         return f"Address {args} added for contact {name}."
 
     def __upcoming_birthdays(self, days) -> str:
@@ -75,8 +74,8 @@ class CommandsHandler:
         self.address_book_manager.delete(name)
         return f"Contact '{name}' deleted."
 
-    def __add_note(self, **args) -> str:
-        self.notes_manager.add_note(**args)
+    def __add_note(self, *args) -> str:
+        self.notes_manager.add_note(*args)
         return "Note is added."
 
     def __update_note(self, title, content) -> str:
@@ -94,10 +93,10 @@ class CommandsHandler:
         return f"Note '{title}': {note}"
 
     def __show_all_contacts(self):
-        return str(self.address_book_manager)
+        return "\n".join(str(record) for record in self.address_book_manager.get_all_records())
 
     def __show_all_notes(self):
-        return str(self.notes_manager)
+        return "\n".join(str(note) for note in self.notes_manager.get_all_notes())
     
     def get_help(self) -> str:
         return get_help_message()

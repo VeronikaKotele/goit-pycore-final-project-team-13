@@ -25,5 +25,8 @@ class NotesManager:
         else:
             raise KeyError(f"Note with title '{title}' not found.")
 
+    def get_all_notes(self) -> list[str]:
+        return list(f"{title}: {content}" for title, content in self.__notebook.data.items())
+
     def __str__(self):
-        return "\n".join(f"{title}: {content}" for title, content in self.__notebook.data.values())
+        return "\n".join(f"{title}: {content}" for title, content in self.__notebook.data.items())

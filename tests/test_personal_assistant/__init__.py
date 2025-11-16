@@ -1,0 +1,1 @@
+# Test package initialization for personal assistant tests
