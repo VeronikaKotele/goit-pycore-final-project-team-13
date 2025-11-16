@@ -64,7 +64,7 @@ class AddressBookManager:
             if 0 <= delta <= days:
                 years_reached = next_date.year - record.birthday.value.year
                 upcoming.append({
-                    "name": record.name.value,
+                    "name": record.name,
                     "next_date": next_date,
                     "years_reached": years_reached
                 })

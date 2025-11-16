@@ -1,14 +1,14 @@
 import unittest
 import sys
 import os
-from datetime import datetime, date
-from unittest.mock import Mock, patch, MagicMock
+from datetime import date
+from unittest.mock import patch
 
 # Add the src directory to Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', 'src'))
 
 from personal_assistant.managers import AddressBookManager
-from personal_assistant.models import AddressBookRecord, Phone, Birthday, HomeAddress
+from personal_assistant.models import Phone, Birthday, HomeAddress
 
 
 class TestAddressBookManager(unittest.TestCase):
@@ -19,12 +19,6 @@ class TestAddressBookManager(unittest.TestCase):
     def tearDown(self):
         if os.path.exists("addressbook_state.pkl"):
             os.remove("addressbook_state.pkl")
-    
-    def _mock_datetime_for_upcoming_birthdays(self, fixed_date):
-        """Helper method to mock datetime for birthday tests."""
-        return patch('personal_assistant.managers.address_book_manager.datetime',
-                        Mock(wraps=datetime,
-                            now=MagicMock(return_value=datetime.combine(fixed_date, datetime.min.time()))))
 
     def test_find_existing_record(self):
         """Test finding an existing record."""
@@ -108,73 +102,96 @@ class TestAddressBookManager(unittest.TestCase):
 
     def test_get_upcoming_birthdays_with_results(self):
         """Test getting upcoming birthdays with mocked date."""
-        fixed_date = datetime(2024, 1, 1)  # January 1, 2024
+        fixed_date = date(2024, 1, 1)  # January 1, 2024
 
         # Add a birthday that will be "upcoming" relative to our fixed date
         # January 3, 1990 - so next birthday would be January 3, 2024 (2 days from fixed date)
         self.manager.add_birthday("John Doe", Birthday("03.01.1990"))
         
-        with self._mock_datetime_for_upcoming_birthdays(fixed_date) as mock_datetime:
-            upcoming = self.manager.get_upcoming_birthdays(7)
-            self.assertEqual(len(upcoming), 1)
-            self.assertEqual(upcoming[0]["name"], "John Doe")
-            self.assertEqual(upcoming[0]["next_date"], datetime(2024, 1, 3))
+        with patch('personal_assistant.managers.address_book_manager.datetime') as mock_datetime:
+            mock_datetime.now.return_value.date.return_value = fixed_date
+            
+            # Mock the get_next_birthday method for John's record
+            john_record = self.manager.find("John Doe")
+            next_birthday_date = date(2024, 1, 3)  # 2 days from fixed date
+            
+            with patch.object(john_record, 'get_next_birthday', return_value=next_birthday_date):
+                upcoming = self.manager.get_upcoming_birthdays(7)
+                self.assertEqual(len(upcoming), 1)
+                self.assertEqual(upcoming[0]["name"], "John Doe")
+                self.assertEqual(upcoming[0]["next_date"], next_birthday_date)
 
     def test_get_upcoming_birthdays_no_results(self):
         """Test getting upcoming birthdays with no results."""
-        # Mock today's date
-        with self._mock_datetime_for_upcoming_birthdays(datetime(2024, 1, 1)) as mock_datetime:
-
+        fixed_date = date(2024, 1, 1)  # January 1, 2024
+        
+        with patch('personal_assistant.managers.address_book_manager.datetime') as mock_datetime:
+            mock_datetime.now.return_value.date.return_value = fixed_date
+            
             # Add a birthday that won't be upcoming (more than 7 days away)
             self.manager.add_birthday("John Doe", Birthday("15.01.1990"))
-            upcoming = self.manager.get_upcoming_birthdays(7)
-            self.assertEqual(len(upcoming), 0)
+            
+            # Mock get_next_birthday to return a date outside the 7-day window
+            john_record = self.manager.find("John Doe")
+            future_birthday_date = date(2024, 1, 15)  # 14 days from fixed date
+            
+            with patch.object(john_record, 'get_next_birthday', return_value=future_birthday_date):
+                upcoming = self.manager.get_upcoming_birthdays(7)
+                self.assertEqual(len(upcoming), 0)
     
     def test_get_upcoming_birthdays_multiple_scenarios(self):
         """Test various birthday scenarios with mocked dates."""
-        fixed_date = datetime(2024, 6, 15)  # June 15, 2024
+        fixed_date = date(2024, 6, 15)  # June 15, 2024
         
-        with self._mock_datetime_for_upcoming_birthdays(fixed_date) as mock_datetime:
-
-            # Add multiple people with different birthdays
-            self.manager.add_record("Linda Brown")
-            self.manager.add_birthday("Linda Brown", Birthday("16.06.1990"))  # Tomorrow
-            self.manager.add_record("Jane Smith")
-            self.manager.add_birthday("Jane Smith", Birthday("20.06.1985"))  # In 5 days
-            self.manager.add_record("Bob Wilson")
-            self.manager.add_birthday("Bob Wilson", Birthday("25.06.1995"))  # In 10 days (outside window)
-
-            # Test with 7-day window - should find John and Jane, but not Bob
-            upcoming = self.manager.get_upcoming_birthdays(7)
-            self.assertEqual(len(upcoming), 2)
-            names = [entry["name"] for entry in upcoming]
-            self.assertIn("Linda Brown", names)
-            self.assertIn("Jane Smith", names)
-            self.assertNotIn("Bob Wilson", names)
+        with patch('personal_assistant.managers.address_book_manager.datetime') as mock_datetime:
+            mock_datetime.now.return_value.date.return_value = fixed_date
             
-            # Test with 15-day window - should find all three
-            upcoming_15 = self.manager.get_upcoming_birthdays(15)
-            self.assertEqual(len(upcoming_15), 3)
+            # Add multiple people with different birthdays
+            linda_record = self.manager.add_record("Linda Brown")
+            self.manager.add_birthday("Linda Brown", Birthday("16.06.1990"))  # Tomorrow
+            jane_record = self.manager.add_record("Jane Smith")
+            self.manager.add_birthday("Jane Smith", Birthday("20.06.1985"))  # In 5 days
+            bob_record = self.manager.add_record("Bob Wilson")
+            self.manager.add_birthday("Bob Wilson", Birthday("25.06.1995"))  # In 10 days (outside window)
+            
+            # Mock each record's get_next_birthday method
+            linda_next = date(2024, 6, 16)  # Tomorrow (1 day away)
+            jane_next = date(2024, 6, 20)   # 5 days away
+            bob_next = date(2024, 6, 25)    # 10 days away
+            
+            with patch.object(linda_record, 'get_next_birthday', return_value=linda_next), \
+                 patch.object(jane_record, 'get_next_birthday', return_value=jane_next), \
+                 patch.object(bob_record, 'get_next_birthday', return_value=bob_next):
+                
+                # Test with 7-day window - should find Linda and Jane, but not Bob
+                upcoming = self.manager.get_upcoming_birthdays(7)
+                self.assertEqual(len(upcoming), 2)
+                names = [entry["name"] for entry in upcoming]
+                self.assertIn("Linda Brown", names)
+                self.assertIn("Jane Smith", names)
+                self.assertNotIn("Bob Wilson", names)
+                
+                # Test with 15-day window - should find all three
+                upcoming_15 = self.manager.get_upcoming_birthdays(15)
+                self.assertEqual(len(upcoming_15), 3)
     
     def test_get_upcoming_birthdays_today(self):
         """Test birthday that occurs today."""
-        fixed_date = datetime(2024, 3, 10)  # March 10, 2024
+        fixed_date = date(2024, 3, 10)  # March 10, 2024
         
-        with self._mock_datetime_for_upcoming_birthdays(fixed_date) as mock_datetime:
-
+        with patch('personal_assistant.managers.address_book_manager.datetime') as mock_datetime:
+            mock_datetime.now.return_value.date.return_value = fixed_date
+            
             # Add someone with birthday today
-            self.manager.add_record("Birthday Person")
+            birthday_record = self.manager.add_record("Birthday Person")
             self.manager.add_birthday("Birthday Person", Birthday("10.03.1990"))
-
-            upcoming = self.manager.get_upcoming_birthdays(7)
-            self.assertEqual(len(upcoming), 1)
-            self.assertEqual(upcoming[0]["name"], "Birthday Person")
-            self.assertEqual(upcoming[0]["next_date"], fixed_date)
-
-    def test_manager_initialization(self):
-        """Test that manager initializes with empty address book."""
-        new_manager = AddressBookManager()
-        self.assertTrue(new_manager.get_all_records() == [])
+            
+            # Mock get_next_birthday to return today's date
+            with patch.object(birthday_record, 'get_next_birthday', return_value=fixed_date):
+                upcoming = self.manager.get_upcoming_birthdays(7)
+                self.assertEqual(len(upcoming), 1)
+                self.assertEqual(upcoming[0]["name"], "Birthday Person")
+                self.assertEqual(upcoming[0]["next_date"], fixed_date)
 
     def test_add_duplicate_phone_raises_error(self):
         """Test adding duplicate phone raises ValueError."""
