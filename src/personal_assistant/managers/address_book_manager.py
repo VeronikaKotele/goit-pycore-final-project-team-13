@@ -69,3 +69,6 @@ class AddressBookManager:
                     "years_reached": years_reached
                 })
         return upcoming
+    
+    def save_data(self):
+        self.__address_book.save_data_to_cache()

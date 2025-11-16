@@ -16,7 +16,7 @@ class TestBirthday(unittest.TestCase):
         with self.assertRaises(ValueError):
             Birthday("01-01-1990")
 
-    def test_birthday_invalid_format(self):
+    def test_birthday_invalid_format_order(self):
         with self.assertRaises(ValueError):
             Birthday("1990.01.01")
 

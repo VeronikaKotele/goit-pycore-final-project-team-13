@@ -13,7 +13,7 @@ project_root/
 ├── tests/                        # Test directory (outside src)
 │   ├── __init__.py               # Makes tests a package
 │   ├── conftest.py               # Test configuration
-│   ├── test_*                    # Test files following original modiles structure
+│   ├── test_*                    # Test files following original modules structure
 |   └── ...
 ├── setup.py                      # Package configuration
 ├── pytest.ini                    # Test runner configuration

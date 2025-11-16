@@ -1,8 +1,6 @@
 import unittest
 import sys
 import os
-from datetime import date
-from unittest.mock import patch
 
 # Add the src directory to Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', 'src'))
@@ -16,8 +14,8 @@ class TestNotesManager(unittest.TestCase):
         self.manager._NotesManager__notebook.clear()
 
     def tearDown(self):
-        if os.path.exists("notebook_state.pkl"):
-            os.remove("notebook_state.pkl")
+        if os.path.exists("notes_state.pkl"):
+            os.remove("notes_state.pkl")
 
     def test_add_note(self):
         self.manager.add_note("Test Title", "Test note content")
