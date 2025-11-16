@@ -26,11 +26,12 @@ class CommandsHandler:
         # Map command names to their handler methods
         self.commands = COMMANDS.copy()
         self.commands["help"].function = self.get_help
+        self.commands["add-contact"].function = self.__add_record
         self.commands["add-phone"].function = self.__add_phone
         self.commands["remove-phone"].function = self.__remove_phone
         self.commands["add-birthday"].function = self.__add_birthday
         self.commands["add-address"].function = self.__add_address
-        self.commands["upcoming-birthdays"].function = self.__upcoming_birthdays
+        self.commands["birthdays"].function = self.__upcoming_birthdays
         self.commands["search"].function = self.__show_contact
         self.commands["delete"].function = self.__delete_contact
         self.commands["all"].function = self.__show_all_contacts
@@ -39,6 +40,10 @@ class CommandsHandler:
         self.commands["update-note"].function = self.__update_note
         self.commands["delete-note"].function = self.__delete_note
         self.commands["all-notes"].function = self.__show_all_notes
+
+    def __add_record(self, name) -> str:
+        self.address_book_manager.add_record(name)
+        return f"Contact '{name}' added."
 
     def __add_phone(self, name, phone) -> str:
         self.address_book_manager.add_phone(name, Phone(phone))
@@ -56,7 +61,7 @@ class CommandsHandler:
         self.address_book_manager.add_address(name, HomeAddress(*args))
         return f"Address {args} added for contact {name}."
 
-    def __upcoming_birthdays(self, days) -> str:
+    def __upcoming_birthdays(self, days = 7) -> str:
         birthdays = self.address_book_manager.get_upcoming_birthdays(int(days))
         if not birthdays:
             return f"No upcoming birthdays in {days} days."
@@ -137,7 +142,7 @@ class CommandsHandler:
                                             , is_error=True)
 
         try:
-            result = command.function(self, *args)
+            result = command.function(*args)
             return CommandsHandler.Response(result)
         except ValueError as ve:
             return CommandsHandler.Response(f"Value error: {ve}", is_error=True)
@@ -145,3 +150,10 @@ class CommandsHandler:
             return CommandsHandler.Response(f"Key error: {ke}", is_error=True)
         except Exception as e:
             return CommandsHandler.Response(f"Error: {e}", is_error=True)
+
+    def save_data(self):
+        """
+        save_data method to save all data before exiting.
+        """
+        self.address_book_manager.save_data()
+        self.notes_manager.save_data()

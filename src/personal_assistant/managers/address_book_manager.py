@@ -6,6 +6,7 @@ from datetime import datetime
 class AddressBookManager:
     def __init__(self):
         self.__address_book = AddressBook()
+        self.__address_book.try_load_data_from_cache()
 
     def add_record(self, name: str) -> AddressBookRecord:
         record = AddressBookRecord(name)
@@ -69,3 +70,6 @@ class AddressBookManager:
                     "years_reached": years_reached
                 })
         return upcoming
+    
+    def save_data(self):
+        self.__address_book.save_data_to_cache()
