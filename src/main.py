@@ -11,8 +11,11 @@ The bot supports commands for:
 - Viewing contact and note information
 """
 import shlex
+from colorama import Fore, init
+
 from personal_assistant import CommandsHandler
 
+init(autoreset=True)
 def parse_input(user_input):
     """
     Parse the user input into a command and its arguments.
@@ -37,23 +40,24 @@ def main():
     """
 
     commands_handler = CommandsHandler()
-    print("Welcome! I am your assistant bot. You can manage your contacts and notes here.")
+    print(f"{Fore.YELLOW}Welcome! I am your assistant bot. You can manage your contacts and notes here.")
     print(commands_handler.get_help())
 
     while True:
-        user_input = input("Enter a command: ")
+        user_input = input(f"{Fore.LIGHTBLACK_EX}Enter a command: {Fore.WHITE}")
         cmd, args = parse_input(user_input)
         if not cmd:
-            print("Please enter a command.")
+            print(f"{Fore.LIGHTBLACK_EX}Please enter a command or 'close' for exit.")
             continue
 
         response = commands_handler.execute_command(cmd, args)
         if response.is_error:
-            print(f"Error: {response.message}")
+            print(f"{Fore.RED}Error: {response.message}")
         else:
-            print(response.message)
+            print(f"{Fore.GREEN}{response.message}")
 
         if response.should_exit:
+            commands_handler.save_data()
             break
 
 if __name__ == "__main__":

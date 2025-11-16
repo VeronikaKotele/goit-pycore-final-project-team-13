@@ -3,6 +3,7 @@ from personal_assistant.models import Notebook
 class NotesManager:
     def __init__(self):
         self.__notebook = Notebook()
+        self.__notebook.try_load_data_from_cache()
 
     def add_note(self, title: str, content: str):
         note_exists = self.__notebook.get(title)
@@ -28,5 +29,5 @@ class NotesManager:
     def get_all_notes(self) -> list[str]:
         return list(f"{title}: {content}" for title, content in self.__notebook.data.items())
 
-    def __str__(self):
-        return "\n".join(f"{title}: {content}" for title, content in self.__notebook.data.items())
+    def save_data(self):
+        self.__notebook.save_data_to_cache()

@@ -12,8 +12,8 @@ class TestNotebook(unittest.TestCase):
         self.notebook = Notebook()
 
     def tearDown(self):
-        if os.path.exists("notebook_state.pkl"):
-            os.remove("notebook_state.pkl")
+        if os.path.exists("notes_state.pkl"):
+            os.remove("notes_state.pkl")
 
     def test_add_string(self):
         self.notebook["ToDo list"] = "Buy milk"

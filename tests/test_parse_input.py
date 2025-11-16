@@ -5,7 +5,7 @@ import os
 # Add the src directory to Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from main import parse_input
+from .main import parse_input
 
 class TestParseInput(unittest.TestCase):
     

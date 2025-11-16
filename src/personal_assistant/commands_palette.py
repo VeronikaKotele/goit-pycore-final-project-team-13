@@ -1,4 +1,4 @@
-from colorama import Fore, Style, init
+from colorama import Fore, init
 
 init(autoreset=True)
 
@@ -16,6 +16,11 @@ COMMANDS = {
     ),
     "help": CommandsInfo(
         name="help", desc="Show this command palette."
+    ),
+    "add-contact": CommandsInfo(
+        name="add-contact", desc="Add a new contact.",
+        args=["name"],
+        example="add-contact John"
     ),
     "add-phone": CommandsInfo(
         name="add-phone", desc="Add a phone number to a contact.",
@@ -37,10 +42,10 @@ COMMANDS = {
         args=["name", "phone"],
         example="remove-phone John 1234567890"
     ),
-    "upcoming-birthday": CommandsInfo(
-        name="upcoming-birthday", desc="Show contacts with birthdays in the next N days.",
+    "birthdays": CommandsInfo(
+        name="birthdays", desc="Show contacts with birthdays in the next N days.",
         args=["days(optional, default=7)"],
-        example="upcoming-birthday 7"
+        example="birthdays 7"
     ),
     "search": CommandsInfo(
         name="search", desc="Search for a contact by name.",
@@ -94,20 +99,19 @@ def get_help_message(command_name:str=None):
     - Description in orange
     - Example usage in yellow
     """
-    message = "\n📖 Command Palette:"
+    message = "\n📖 Command Palette:\n"
     for cmd, info in COMMANDS.items():
         if command_name and cmd != command_name:
             continue
 
-        message += (
-            f"{Fore.BLUE}{cmd:<15} - "
-            f"{Fore.WHITE}{info.desc:<60}"
-        )
+        message += f"{Fore.BLUE}{cmd}"
+
         if info.args:
-            args_str = ", ".join(info.args)
-            message += f"{Fore.BLUE} Args: ({args_str})."
+            message += f"{Fore.BLUE} <{('> <'.join(info.args))}>"
+
+        message += f" - {Fore.WHITE}{info.desc}"
+
         if info.example:
-            message += (
-            f"{Fore.LIGHTBLACK_EX} Example: {info.example}\n"
-        )
+            message += f"{Fore.LIGHTBLACK_EX} Example: {info.example}"
+        message += "\n"
     return message
