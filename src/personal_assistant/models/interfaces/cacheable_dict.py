@@ -14,13 +14,11 @@ class CacheableDict(UserDict):
     """
 
     def __init__(self, filename):
+        """
+        Constructor that loads existing dictionary data from the specified file if it exists
+        """
         self.__state_storage_filename = filename
         super().__init__()
-
-    def try_load_data_from_cache(self):
-        """
-        Loads existing dictionary data from the specified file if it exists
-        """
         try:
             with open(self.__state_storage_filename, "rb") as f:
                 data = pickle.load(f)

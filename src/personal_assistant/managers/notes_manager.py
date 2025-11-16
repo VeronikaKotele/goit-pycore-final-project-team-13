@@ -3,7 +3,6 @@ from personal_assistant.models import Notebook
 class NotesManager:
     def __init__(self):
         self.__notebook = Notebook()
-        self.__notebook.try_load_data_from_cache()
 
     def add_note(self, title: str, content: str):
         note_exists = self.__notebook.get(title)

@@ -24,13 +24,13 @@ class TestCacheableDict(unittest.TestCase):
     def test_saves_to_file(self):
         cacheable_dict = CacheableDict(self.pklfile)
         cacheable_dict['key1'] = 'value1'
-        del cacheable_dict
+        cacheable_dict.save_data_to_cache()
         assert os.path.exists(self.pklfile)
 
     def test_restore_data_from_file(self):
         old_dict = CacheableDict(self.pklfile)
         old_dict['key1'] = 'value1'
-        del old_dict
+        old_dict.save_data_to_cache()
 
         cacheable_dict = CacheableDict(self.pklfile)
         self.assertEqual(len(cacheable_dict), 1)

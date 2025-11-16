@@ -35,7 +35,7 @@ class TestAddressBookRecord(unittest.TestCase):
 
     def test_remove_nonexistent_phone_raises(self):
         phone = Phone("1234567890")
-        with self.assertRaises(ValueError):
+        with self.assertRaises(KeyError):
             self.record.remove_phone(phone)
 
     def test_add_email(self):

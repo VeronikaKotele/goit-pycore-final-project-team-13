@@ -11,6 +11,9 @@ class CommandsInfo:
         self.function = None
 
 COMMANDS = {
+    "hi": CommandsInfo(
+        name="hello", desc="Greets the user."
+    ),
     "hello": CommandsInfo(
         name="hello", desc="Greets the user."
     ),

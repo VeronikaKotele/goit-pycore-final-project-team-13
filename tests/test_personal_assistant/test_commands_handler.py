@@ -7,7 +7,7 @@ from unittest.mock import Mock, patch
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
 
 from personal_assistant.commands_handler import CommandsHandler
-from personal_assistant.models import Phone, Birthday
+from personal_assistant.models import Phone, Birthday, AddressBookRecord
 
 
 class TestCommandsHandler(unittest.TestCase):
@@ -109,44 +109,44 @@ class TestCommandsHandler(unittest.TestCase):
                 self.assertIsInstance(e, (TypeError, ValueError))
 
     def test_upcoming_birthdays_with_results(self):
-        """Test upcoming-birthdays command with results."""
+        """Test birthdays command with results."""
         mock_birthdays = [
-            {"name": "John", "next_date": "2023-12-25", "years_reached": 30},
-            {"name": "Jane", "next_date": "2023-12-30", "years_reached": 25}
+            {"name": "John", "next_date": "25.12.2023", "years_reached": 30},
+            {"name": "Jane", "next_date": "30.12.2023", "years_reached": 25}
         ]
         with patch.object(self.handler.address_book_manager, 'get_upcoming_birthdays', return_value=mock_birthdays):
-            response = self.handler.execute_command("upcoming-birthdays", ["7"])
+            response = self.handler.execute_command("birthdays", ["7"])
 
             self.assertFalse(response.is_error)
             self.assertIn("Upcoming birthdays:", response.message)
-            self.assertIn("John - 2023-12-25 (turning 30)", response.message)
-            self.assertIn("Jane - 2023-12-30 (turning 25)", response.message)
+            self.assertIn("John - 25.12.2023 (turning 30)", response.message)
+            self.assertIn("Jane - 30.12.2023 (turning 25)", response.message)
 
     def test_upcoming_birthdays_no_results(self):
-        """Test upcoming-birthdays command with no results."""
+        """Test birthdays command with no results."""
         with patch.object(self.handler.address_book_manager, 'get_upcoming_birthdays', return_value=[]):
-            response = self.handler.execute_command("upcoming-birthdays", ["7"])
+            response = self.handler.execute_command("birthdays", ["7"])
             
             self.assertFalse(response.is_error)
             self.assertEqual(response.message, "No upcoming birthdays in 7 days.")
 
     def test_search_contact_found(self):
         """Test search command when contact is found."""
-        mock_contact = Mock()
-        mock_contact.__str__ = Mock(return_value="John: phone1, phone2")
-        with patch.object(self.handler.address_book_manager, 'find', return_value=mock_contact):
+        record = AddressBookRecord("John")
+        record.add_phone(Phone("1234567890"))
+        with patch.object(self.handler.address_book_manager, 'find', return_value=record):
             response = self.handler.execute_command("search", ["John"])
 
             self.assertFalse(response.is_error)
-            self.assertEqual(response.message, "John: phone1, phone2")
+            self.assertEqual(response.message, "Name: John, Phones: [1234567890]")
 
     def test_search_contact_not_found(self):
         """Test search command when contact is not found."""
         with patch.object(self.handler.address_book_manager, 'find', return_value=None):
-            response = self.handler.execute_command("search", ["NonExistent"])
+            response = self.handler.execute_command("search", ["John"])
 
             self.assertTrue(response.is_error)
-            self.assertIn("Contact with name 'NonExistent' not found", response.message)
+            self.assertIn("Contact with name 'John' not found", response.message)
 
     def test_delete_contact_via_execute_command(self):
         """Test delete command via execute_command."""
@@ -211,22 +211,22 @@ class TestCommandsHandler(unittest.TestCase):
     def test_show_all_contacts_via_execute_command(self):
         """Test all command via execute_command."""
         mock_manager = Mock()
-        mock_manager.__str__ = Mock(return_value="All contacts: John, Jane")
+        mock_manager.get_all_records = Mock(return_value=[AddressBookRecord("John"), AddressBookRecord("Jane")])
         with patch.object(self.handler, 'address_book_manager', mock_manager):
             response = self.handler.execute_command("all", [])
 
             self.assertFalse(response.is_error)
-            self.assertEqual(response.message, "All contacts: John, Jane")
+            self.assertEqual(response.message, "Name: John\nName: Jane")
 
     def test_show_all_notes_via_execute_command(self):
         """Test all-notes command via execute_command."""
         mock_manager = Mock()
-        mock_manager.__str__ = Mock(return_value="All notes: Note1, Note2")
+        mock_manager.get_all_notes = Mock(return_value=["Note1", "Note2"])
         with patch.object(self.handler, 'notes_manager', mock_manager):
             response = self.handler.execute_command("all-notes", [])
 
             self.assertFalse(response.is_error)
-            self.assertEqual(response.message, "All notes: Note1, Note2")
+            self.assertEqual(response.message, "Note1\nNote2")
 
     def test_execute_command_unknown(self):
         """Test execute_command with unknown command."""
@@ -271,16 +271,16 @@ class TestCommandsHandler(unittest.TestCase):
     def test_execute_command_success(self, mock_manager_class):
         """Test execute_command with successful execution."""
         mock_manager = Mock()
-        mock_contact = Mock()
-        mock_contact.__str__ = Mock(return_value="John: 1234567890")
-        mock_manager.find.return_value = mock_contact
+        record = AddressBookRecord("John")
+        record.add_phone(Phone("1234567890"))
+        mock_manager.find.return_value = record
         mock_manager_class.return_value = mock_manager
 
         handler = CommandsHandler()
         response = handler.execute_command("search", ["John"])
         
         self.assertFalse(response.is_error)
-        self.assertEqual(response.message, "John: 1234567890")
+        self.assertEqual(response.message, "Name: John, Phones: [1234567890]")
         self.assertFalse(response.should_exit)
 
     @patch('personal_assistant.commands_handler.AddressBookManager')
@@ -291,7 +291,7 @@ class TestCommandsHandler(unittest.TestCase):
         mock_manager_class.return_value = mock_manager
 
         handler = CommandsHandler()
-        response = handler.execute_command("upcoming-birthdays", ["invalid"])
+        response = handler.execute_command("birthdays", [7])
 
         self.assertTrue(response.is_error)
         self.assertIn("Value error:", response.message)
