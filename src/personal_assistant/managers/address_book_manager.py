@@ -7,6 +7,11 @@ class AddressBookManager:
     def __init__(self):
         self.__address_book = AddressBook()
 
+    def add_record(self, name: str) -> AddressBookRecord:
+        record = AddressBookRecord(name)
+        self.__address_book[name] = record
+        return record
+
     def find(self, name: str) -> AddressBookRecord | None:
         return self.__address_book.get(name)
 
@@ -44,11 +49,17 @@ class AddressBookManager:
             return record
         raise KeyError(f"No record found for {name}.")
 
+    def get_all_records(self) -> list[AddressBookRecord]:
+        return list(self.__address_book.values())
+
     def get_upcoming_birthdays(self, days = 7):
         today = datetime.now().date()
         upcoming = []
         for record in self.__address_book.values():
             next_date = record.get_next_birthday()
+            if not next_date:
+                continue
+
             delta = (next_date - today).days
             if 0 <= delta <= days:
                 years_reached = next_date.year - record.birthday.value.year

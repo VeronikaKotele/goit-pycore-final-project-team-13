@@ -2,6 +2,7 @@ from .phone import Phone
 from .birthday import Birthday
 from .address import HomeAddress
 from .email import Email
+from datetime import datetime, date
 
 class AddressBookRecord:
     def __init__(self, name: str):
@@ -22,15 +23,25 @@ class AddressBookRecord:
     def add_address(self, address: HomeAddress):
         self.address = address
 
-    def edit_phone(self, old_phone: Phone, new_phone: Phone):
+    def remove_phone(self, old_phone: Phone):
         try:
-            phone_index = self.phones.index(old_phone)
-            self.phones[phone_index] = new_phone
+            self.phones.remove(old_phone)
         except ValueError:
-            raise ValueError(f"Phone number {old_phone} does not exist for contact {self.name}.")
+            raise KeyError(f"Phone number {old_phone} does not exist for contact {self.name}.")
 
     def add_email(self, email: Email):
         self.email = email
+
+    def get_next_birthday(self) -> date | None:
+        if not self.birthday:
+            return None
+        today = datetime.now().date()
+        current_year_birthday = self.birthday.value.replace(year=today.year).date()
+        if current_year_birthday < today:
+            next_birthday = current_year_birthday.replace(year=today.year + 1)
+        else:
+            next_birthday = current_year_birthday
+        return next_birthday
 
     def __str__(self):
         phones_str = ", Phones: [" + ", ".join(str(phone) for phone in self.phones) + "]" if self.phones else ""

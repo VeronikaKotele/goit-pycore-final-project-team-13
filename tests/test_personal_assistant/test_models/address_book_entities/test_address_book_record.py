@@ -27,19 +27,16 @@ class TestAddressBookRecord(unittest.TestCase):
         self.record.add_birthday(birthday)
         self.assertEqual(self.record.birthday, birthday)
 
-    def test_edit_phone(self):
-        old_phone = Phone("1234567890")
-        new_phone = Phone("0987654321")
-        self.record.add_phone(old_phone)
-        self.record.edit_phone(old_phone, new_phone)
-        self.assertIn(new_phone, self.record.phones)
-        self.assertNotIn(old_phone, self.record.phones)
+    def test_remove_phone(self):
+        phone = Phone("1234567890")
+        self.record.add_phone(phone)
+        self.record.remove_phone(phone)
+        self.assertNotIn(phone, self.record.phones)
 
-    def test_edit_nonexistent_phone_raises(self):
-        old_phone = Phone("1234567890")
-        new_phone = Phone("0987654321")
+    def test_remove_nonexistent_phone_raises(self):
+        phone = Phone("1234567890")
         with self.assertRaises(ValueError):
-            self.record.edit_phone(old_phone, new_phone)
+            self.record.remove_phone(phone)
 
     def test_add_email(self):
         email = Email("john.doe@example.com")

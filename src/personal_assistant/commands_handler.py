@@ -93,10 +93,10 @@ class CommandsHandler:
         return f"Note '{title}': {note}"
 
     def __show_all_contacts(self):
-        return str(self.address_book_manager)
+        return "\n".join(str(record) for record in self.address_book_manager.get_all_records())
 
     def __show_all_notes(self):
-        return str(self.notes_manager)
+        return "\n".join(str(note) for note in self.notes_manager.get_all_notes())
     
     def get_help(self) -> str:
         return get_help_message()
