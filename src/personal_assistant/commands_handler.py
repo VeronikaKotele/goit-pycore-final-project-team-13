@@ -61,8 +61,7 @@ class CommandsHandler:
 
     def __add_address(self, name, *args) -> str:
         self.address_book_manager.add_address(name, HomeAddress(*args))
-        return f"Address {args} added for contact {name}."
-
+        return f"Address '{' '.join(args)}' added for contact {name}."
     def __upcoming_birthdays(self, days = 7) -> str:
         birthdays = self.address_book_manager.get_upcoming_birthdays(int(days))
         if not birthdays:
@@ -81,11 +80,13 @@ class CommandsHandler:
         self.address_book_manager.delete(name)
         return f"Contact '{name}' deleted."
 
-    def __add_note(self, title, content) -> str:
+    def __add_note(self, title, *args) -> str:
+        content = " ".join(args)
         self.notes_manager.add_note(title, content)
         return "Note is added."
 
-    def __update_note(self, title, content) -> str:
+    def __update_note(self, title, *args) -> str:
+        content = " ".join(args)
         self.notes_manager.update(title, content)
         return f"Note '{title}' updated. New content: {self.notes_manager.find(title)}"
 
@@ -98,8 +99,10 @@ class CommandsHandler:
         if not note:
             raise KeyError(f"Note with title '{title}' not found.")
         return f"Note '{title}': {note}"
+
     def __add_tag(self, title, tag) -> str:
-        return self.notes_manager.add_tag(title, tag)
+        self.notes_manager.add_tag(title, tag)
+        return f"Tag '{tag}' added to note '{title}'."
 
     def __search_by_tag(self, tag) -> str:
         notes = self.notes_manager.search_by_tag(tag)
@@ -143,7 +146,7 @@ class CommandsHandler:
 
         command = self.commands[cmd_name]
         expected_args_count = command.function.__code__.co_argcount - 1  # exclude 'self'
-        if len(args) != expected_args_count:
+        if len(args) < expected_args_count:
             return CommandsHandler.Response("Arguments error: " +
                                             f"Expected {expected_args_count} arguments, got {len(args)}.\n" +
                                             get_help_message(cmd_name)
