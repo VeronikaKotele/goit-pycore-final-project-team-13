@@ -24,5 +24,6 @@ and provide a robust foundation for the application's functionality.
 from .address_book import AddressBook
 from .notebook import Notebook
 from .address_book_entities import AddressBookRecord, Phone, Birthday, HomeAddress, Email
+from .note import Note
 
-__all__ = ['AddressBook', 'Notebook', 'AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday', 'Email']
+__all__ = ['AddressBook', 'Notebook', 'AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday', 'Email', 'Note']
