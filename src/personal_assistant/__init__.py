@@ -21,7 +21,7 @@ Project: GoIT Python Core Final Project
 """
 
 from .managers import AddressBookManager, NotesManager
-from .models import AddressBook, Notebook, AddressBookRecord, HomeAddress, Phone, Birthday, Email
+from .models import AddressBook, Notebook, AddressBookRecord, HomeAddress, Phone, Birthday, Email, Note
 from .commands_handler import CommandsHandler
 
-__all__ = ['AddressBookManager', 'NotesManager', 'AddressBook', 'Notebook', 'AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday', 'Email', 'CommandsHandler']
+__all__ = ['AddressBookManager', 'NotesManager', 'AddressBook', 'Notebook', 'AddressBookRecord', 'HomeAddress', 'Phone', 'Birthday', 'Email', 'Note', 'CommandsHandler']

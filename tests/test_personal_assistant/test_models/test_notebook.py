@@ -18,7 +18,7 @@ class TestNotebook(unittest.TestCase):
     def test_add_string(self):
         self.notebook["ToDo list"] = "Buy milk"
         self.assertIn("ToDo list", self.notebook.keys())
-        self.assertEqual(self.notebook["ToDo list"], "Buy milk")
+        self.assertEqual(self.notebook["ToDo list"].content, "Buy milk")
 
     def test_add_not_string_raises(self):
         with self.assertRaises(TypeError):
