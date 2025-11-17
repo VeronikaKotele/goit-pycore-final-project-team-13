@@ -54,12 +54,12 @@ class CommandsHandler:
         return f"Phone {phone} removed from contact {name}."
 
     def __add_birthday(self, name, birthday) -> str:
-        self.address_book_manager.add_birthday(name, Birthday(birthday))
-        return f"Birthday {birthday} added for contact {name}."
+        record = self.address_book_manager.add_birthday(name, Birthday(birthday))
+        return f"Birthday {record.birthday} added for contact {name}."
 
     def __add_address(self, name, *args) -> str:
-        self.address_book_manager.add_address(name, HomeAddress(*args))
-        return f"Address {args} added for contact {name}."
+        record = self.address_book_manager.add_address(name, HomeAddress(*args))
+        return f"Address '{record.address}' added for contact {name}."
 
     def __upcoming_birthdays(self, days = 7) -> str:
         birthdays = self.address_book_manager.get_upcoming_birthdays(int(days))
@@ -135,7 +135,7 @@ class CommandsHandler:
 
         command = self.commands[cmd_name]
         expected_args_count = command.function.__code__.co_argcount - 1  # exclude 'self'
-        if len(args) != expected_args_count:
+        if len(args) < expected_args_count:
             return CommandsHandler.Response("Arguments error: " +
                                             f"Expected {expected_args_count} arguments, got {len(args)}.\n" +
                                             get_help_message(cmd_name)
