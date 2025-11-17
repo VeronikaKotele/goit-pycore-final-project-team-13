@@ -118,8 +118,8 @@ class TestCommandsHandler(unittest.TestCase):
         with patch.object(self.handler.address_book_manager, 'get_upcoming_birthdays', return_value=[]):
             response = self.handler.execute_command("birthdays", ["7"])
             
-        self.assertFalse(response.is_error)
-        self.assertEqual(response.message, "No upcoming birthdays in 7 days.")
+            self.assertFalse(response.is_error)
+            self.assertEqual(response.message, "No upcoming birthdays in 7 days.")
 
     def test_search_contact_found(self):
         """Test search command when contact is found."""
