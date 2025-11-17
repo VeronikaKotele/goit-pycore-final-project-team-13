@@ -1,5 +1,6 @@
 from .managers import AddressBookManager, NotesManager
 from .models import HomeAddress, Phone, Birthday
+from personal_assistant.models import Note
 from .commands_palette import COMMANDS, get_help_message
 
 class CommandsHandler:
@@ -39,6 +40,8 @@ class CommandsHandler:
         self.commands["search-note"].function = self.__show_note
         self.commands["update-note"].function = self.__update_note
         self.commands["delete-note"].function = self.__delete_note
+        self.commands["add-tag"].function = self.__add_tag
+        self.commands["search-tag"].function = self.__search_by_tag
         self.commands["all-notes"].function = self.__show_all_notes
 
     def __add_record(self, name) -> str:
@@ -96,6 +99,17 @@ class CommandsHandler:
         if not note:
             raise KeyError(f"Note with title '{title}' not found.")
         return f"Note '{title}': {note}"
+    def __add_tag(self, title, tag) -> str:
+        return self.notes_manager.add_tag_to_note(title, tag)
+
+    def __search_by_tag(self, tag) -> str:
+        notes = self.notes_manager.search_by_tag(tag)
+        return "\n".join(str(note) for note in notes) if notes else f"No notes with tag '{tag}'."
+
+
+
+
+
 
     def __show_all_contacts(self):
         return "\n".join(str(record) for record in self.address_book_manager.get_all_records())

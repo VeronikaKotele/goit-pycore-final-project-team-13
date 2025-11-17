@@ -1,4 +1,5 @@
 from .interfaces import CacheableDict
+from personal_assistant.models import Note
 
 class Notebook(CacheableDict):
     """
