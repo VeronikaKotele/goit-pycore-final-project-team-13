@@ -85,7 +85,8 @@ class CommandsHandler:
         self.notes_manager.add_note(title, content)
         return "Note is added."
 
-    def __update_note(self, title, content) -> str:
+    def __update_note(self, title, *args) -> str:
+        content = " ".join(args)
         self.notes_manager.update(title, content)
         return f"Note '{title}' updated. New content: {self.notes_manager.find(title)}"
 
@@ -98,6 +99,7 @@ class CommandsHandler:
         if not note:
             raise KeyError(f"Note with title '{title}' not found.")
         return f"Note '{title}': {note}"
+
     def __add_tag(self, title, tag) -> str:
         self.notes_manager.add_tag(title, tag)
         return f"Tag '{tag}' added to note '{title}'."
