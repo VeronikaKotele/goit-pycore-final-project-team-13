@@ -7,7 +7,7 @@ setup(
     package_dir={"": "src"},
     python_requires=">=3.8",
     install_requires=[
-        # Add your dependencies here
+        "colorama>=0.4.6"
     ],
     extras_require={
         "dev": [
