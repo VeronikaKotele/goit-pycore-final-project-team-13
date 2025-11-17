@@ -1,5 +1,5 @@
 from .interfaces import CacheableDict
-from personal_assistant.models import Note
+from .note import Note
 
 class Notebook(CacheableDict):
     """
@@ -12,10 +12,13 @@ class Notebook(CacheableDict):
     def __init__(self):
         CacheableDict.__init__(self, "notes_state.pkl")
 
-    def __setitem__(self, key, value):
-        if not isinstance(value, str):
-            raise TypeError("Only string values are allowed in Notebook.")
-        super().__setitem__(key, value)
+    def __setitem__(self, key, value: Note):
+        if isinstance(value, str):
+            super().__setitem__(key, Note(key, value))
+        elif isinstance(value, Note):
+            super().__setitem__(key, value)
+        else:
+            raise TypeError("Only strings and Note instances are allowed in Notebook.")
 
     def __str__(self):
         return "\n".join(str(record) for record in self.data.values())

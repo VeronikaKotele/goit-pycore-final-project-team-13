@@ -66,7 +66,7 @@ COMMANDS = {
     "add-note": CommandsInfo(
         name="add-note", desc="Add a new note.",
         args=["title", "content"],
-        example="add-note 'shopping_list': 'Buy milk'"
+        example="add-note 'shopping_list' 'Buy milk'"
     ),
     "search-note": CommandsInfo(
         name="search-note", desc="Search notes by title.",
@@ -76,12 +76,22 @@ COMMANDS = {
     "update-note": CommandsInfo(
         name="update-note", desc="Edit an existing note - override by title.",
         args=["title", "content"],
-        example="update-note 'shopping_list': 'Buy bread instead'"
+        example="update-note 'shopping_list' 'Buy bread instead'"
     ),
     "delete-note": CommandsInfo(
         name="delete-note", desc="Delete a note.",
         args=["title"],
         example="delete-note 'shopping_list'"
+    ),
+    "add-tag": CommandsInfo(
+        name="add-tag", desc="Add a tag to a note.",
+        args=["title", "tag"],
+        example="add-tag 'shopping_list' urgent"
+    ),
+    "search-tag": CommandsInfo(
+        name="search-tag", desc="Search notes by tag.",
+        args=["tag"],
+        example="search-tag urgent"
     ),
     "all-notes": CommandsInfo(
         name="all-notes", desc="Show all notes.",
