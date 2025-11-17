@@ -16,3 +16,8 @@ class Phone:
 
     def __str__(self):
         return str(self.value)
+    
+    def __eq__(self, other):
+        if isinstance(other, Phone):
+            return self.value == other.value
+        return False

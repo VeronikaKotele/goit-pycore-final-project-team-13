@@ -81,7 +81,8 @@ class CommandsHandler:
         self.address_book_manager.delete(name)
         return f"Contact '{name}' deleted."
 
-    def __add_note(self, title, content) -> str:
+    def __add_note(self, title, *args) -> str:
+        content = " ".join(args)
         self.notes_manager.add_note(title, content)
         return "Note is added."
 
@@ -99,7 +100,8 @@ class CommandsHandler:
             raise KeyError(f"Note with title '{title}' not found.")
         return f"Note '{title}': {note}"
     def __add_tag(self, title, tag) -> str:
-        return self.notes_manager.add_tag(title, tag)
+        self.notes_manager.add_tag(title, tag)
+        return f"Tag '{tag}' added to note '{title}'."
 
     def __search_by_tag(self, tag) -> str:
         notes = self.notes_manager.search_by_tag(tag)
