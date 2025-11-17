@@ -92,12 +92,13 @@ class TestCommandsHandler(unittest.TestCase):
 
     def test_add_address_via_execute_command(self):
         """Test add-address command via execute_command."""
+        self.handler.address_book_manager.add_record("John")  # Ensure contact exists
         response = self.handler.execute_command("add-address", ["John", "123 Main St"])
         self.assertEqual("Address '123 Main St' added for contact John.", response.message)
         self.assertFalse(response.is_error)
         contact = self.handler.address_book_manager.find("John")
         self.assertIsNotNone(contact)
-        self.assertIn("123 Main St", str(contact.addresses))
+        self.assertIn("123 Main St", str(contact.address))
 
     def test_upcoming_birthdays_with_results(self):
         """Test birthdays command with results."""
