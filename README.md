@@ -43,11 +43,6 @@ For development installation with testing dependencies:
 pip install -e ".[dev]"
 ```
 
-3. Install dependencies
-```bash
-pip install -r requirements.txt
-```
-
 ## Usage
 
 Run the personal assistant:
